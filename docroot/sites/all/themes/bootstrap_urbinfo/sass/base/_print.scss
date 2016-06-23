@@ -1,0 +1,33 @@
+@media print {
+  .col-pr-1 {
+    @include make-xs-column(1);
+  }
+  .col-pr-2 {
+    @include make-xs-column(2);
+  }
+  .col-pr-3 {
+    @include make-xs-column(3);
+  }
+  .col-pr-4 {
+    @include make-xs-column(4);
+  }
+  .col-pr-5 {
+    @include make-xs-column(5);
+  }
+  .col-pr-6 {
+    @include make-xs-column(6);
+  }
+  .col-pr-7 {
+    @include make-xs-column(7);
+  }
+  .col-pr-8 {
+    @include make-xs-column(8);
+  }
+
+  a[href=""]:after,
+  a[href^="#"]:after,
+  a[href^="mailto:"]:after,
+  a[href^="tel:"]:after {
+    display: none;
+  }
+}

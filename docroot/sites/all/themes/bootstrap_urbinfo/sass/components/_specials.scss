@@ -1,0 +1,262 @@
+.business__section--specials {
+  .specials {
+
+
+  }
+  h2.business__section-title {
+    text-align: center;
+  }
+
+}
+
+#specials-date-time-dropdown {
+  display: block;
+}
+
+@media (min-width: $screen-sm-min) {
+  .specials__list {
+    max-height: 600px;
+    overflow: auto;
+  }
+}
+
+.specials__edit-btn,
+.specials__done-btn {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+}
+
+.specials__add-btn {
+  margin-bottom: 20px;
+}
+
+.specials__edit-btn {
+  @include fade-in-on-parent-hover(3);
+}
+
+.special__edit_mode_list_item {
+  height: 80px;
+}
+
+.special {
+  @include pie-clearfix;
+  margin-bottom: 20px;
+  position: relative;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.special__image {
+  text-align: center;
+  @media (min-width: $screen-sm-min) and (max-width: 900px) {
+    max-width: none;
+  }
+}
+
+.special__content {
+  font-size: 13px;
+  background: #fff;
+  padding: 15px;
+  height: 95px;
+  overflow: hidden;
+}
+
+.special__title {
+  font-size: 1.5em;
+  margin: 0 0 .2em;
+  > a {
+    color: #888;
+  }
+}
+
+.special__options {
+  position: absolute;
+  top: 10px;
+  #{$dir-default}: 10px;
+  display: none;
+  :hover > & {
+    display: block;
+  }
+}
+
+/**
+ * Slider
+ */
+.specials--slider-wrapper {
+  max-width: 1225px;
+  margin: 0 auto;
+}
+
+.specials--slider {
+  .special__content {
+    text-align: center;
+    border-right: 1px solid #f5f5f5;
+  }
+  .slick-active:last-child {
+    .special__content {
+      border-right: 0;
+    }
+  }
+
+  .special__image {
+    position: relative;
+    .special__valid-till-date {
+      top: 0;
+      left: 0;
+      position: absolute;
+      background: #ccc;
+      opacity: 0.6;
+      text-align: center;
+      height: 46px;
+      width: 46px;
+      line-height: 1;
+      padding: 2px 0;
+      .day {
+        font-size: 25px;
+      }
+      .month {
+        display: block;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+/**
+ * Dialog
+ */
+.specials__dialog {
+
+  .slick-list .slick-slide2 {
+    background: #fff;
+    padding: 10px 10px 0 10px;
+  }
+
+  .special__content {
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+  }
+
+  .special__description {
+    margin-top: 15px;
+  }
+}
+
+/**
+ * Node
+ */
+.node-promotion.full {
+
+  position: relative;
+
+  h1 {
+    font-size: 22px;
+    margin-top: 20px;
+  }
+
+  .field-label {
+    font-weight: normal;
+    font-weight: 600;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .specials__node--title {
+    background: #fff;
+    margin-top: -20px;
+    h2 {
+      font-weight: normal;
+      margin: 20px 0;
+      padding-right: 50px;
+    }
+  }
+
+  .specials__node--footer {
+    height: 20px;
+    margin-bottom: -40px;
+    background: #fff;
+  }
+
+  .specials__node--fancy-title {
+    .field-name-title-field {
+      text-align: center;
+      text-transform: uppercase;
+      margin: 160px auto 110px auto;
+      color: #fff;
+      font-weight: bold;
+      font-size: 60px;
+      max-width: 490px;
+      border-top: 5px solid #fff;
+      .field-items {
+        border-bottom: 5px solid #fff;
+        .field-item {
+          line-height: 1.1;
+          padding: 20px 10px;
+        }
+      }
+    }
+  }
+
+  .specials__node--content {
+    padding: 20px 40px 40px 40px;
+    background: #fff;
+    border: 5px solid rgba(204, 204, 204, .5);
+    border-bottom: 0;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+
+    .business__logo {
+      margin-top: 20px;
+    }
+  }
+
+  .specials__node--next {
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .specials__node--prev {
+    left: 20px;
+    z-index: 1000;
+  }
+
+  .specials__node--close {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 0;
+
+    &:hover:before {
+      background-color: #198AB7;
+      color: #fff;
+    }
+    &:before {
+      color: #fff;
+      content: "\00D7";
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 27px;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 1px;
+      width: 30px;
+      height: 30px;
+      background-color: $brand-blue;
+    }
+  }
+
+}
+
+.node-type-promotion {
+  background: #ABABAB;
+  .tabs--primary {
+    display: none;
+  }
+}

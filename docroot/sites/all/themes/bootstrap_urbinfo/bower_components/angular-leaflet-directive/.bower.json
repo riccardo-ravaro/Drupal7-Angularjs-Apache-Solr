@@ -1,0 +1,64 @@
+{
+  "name": "angular-leaflet-directive",
+  "description": "AngularJS directive to embed an interact with maps managed by Leaflet library",
+  "keywords": [
+    "angularjs",
+    "javascript",
+    "directive",
+    "leaflet"
+  ],
+  "main": [
+    "dist/angular-leaflet-directive.js"
+  ],
+  "dependencies": {
+    "angular": "1.2.x",
+    "leaflet": "0.7.x"
+  },
+  "devDependencies": {
+    "jquery": "*",
+    "bootstrap": "*",
+    "angular-route": "*",
+    "angular-animate": "*",
+    "angular-mocks": "*",
+    "leaflet.markercluster": "*",
+    "leaflet.draw": "*",
+    "Leaflet.label": "*",
+    "leaflet-tilelayer-geojson": "*",
+    "Leaflet.utfgrid": "danzel/Leaflet.utfgrid",
+    "Leaflet.awesome-markers": "*",
+    "webgl-heatmap-leaflet": "*",
+    "leaflet-plugins": "*",
+    "esri-leaflet": "*",
+    "proj4": "*",
+    "proj4leaflet": "*",
+    "Leaflet.MakiMarkers": "*",
+    "Leaflet.PolylineDecorator": "bbecquet/Leaflet.PolylineDecorator",
+    "ionrangeslider": "~1.9.3"
+  },
+  "overrides": {
+    "Leaflet.utfgrid": {
+      "main": "dist/leaflet.utfgrid.js"
+    }
+  },
+  "ignore": [
+    "**/.*",
+    "src",
+    "doc",
+    "examples",
+    "test",
+    "*.md",
+    "Gruntfile.js",
+    "package.json",
+    "bower.json"
+  ],
+  "homepage": "https://github.com/tombatossals/angular-leaflet-directive",
+  "_release": "504af8122d",
+  "_resolution": {
+    "type": "commit",
+    "commit": "504af8122d"
+  },
+  "_source": "git://github.com/tombatossals/angular-leaflet-directive.git",
+  "_target": "504af8122d",
+  "_originalSource": "angular-leaflet-directive",
+  "_direct": true
+}

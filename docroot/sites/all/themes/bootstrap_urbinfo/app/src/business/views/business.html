@@ -1,0 +1,621 @@
+<div class="business">
+  <div class="row">
+    <!-- Cover image -->
+    <div class="business__cover-image editable-image hidden-print"
+         ng-class="{'is-empty': !business.field_cover_image.und.length}"
+         ng-controller="CoverImage">
+      <img ng-show="business.field_cover_image.und.length"
+           ng-src="{{business.field_cover_image.und[0].url | imageStyle: 'business_cover_image'}}"
+           alt="{{selectLang(business.title_field)[0].value}}" />
+
+      <div class="editable-image__select" ng-show="canEdit">
+        <div ng-hide="confirm">
+          <span class="upload-wrapper" ng-hide="uploadProgress">
+            <button class="btn btn-primary" ng-show="business.field_cover_image.und.length">
+              <span class="glyphicon glyphicon-picture"></span>
+              <span locale-string="BTN_CHANGE"></span>
+            </button>
+            <button class="btn btn-success" ng-hide="business.field_cover_image.und.length">
+              <span class="glyphicon glyphicon-picture"></span>
+              <span locale-string="BTN_ADD_COVER_IMAGE"></span>
+            </button>
+            <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*" />
+          </span>
+          <button class="btn btn-danger" ng-click="confirm = true" ng-show="business.field_cover_image.und.length">
+            <span class="glyphicon glyphicon-remove"></span>
+            <span locale-string="BTN_REMOVE"></span>
+          </button>
+          <button class="btn btn-default" ng-click="cancel()" ng-show="uploadProgress">
+            <span locale-string="BTN_CANCEL"></span>
+          </button>
+        </div>
+
+        <!-- Remove confirmation -->
+        <div ng-show="confirm">
+          <button class="btn btn-danger" ng-click="remove()">
+            <span class="glyphicon glyphicon-ok"></span>
+            <span locale-string="BTN_CONFIRM"></span>
+          </button>
+          <button class="btn btn-default" ng-click="confirm = false">
+            <span class="glyphicon glyphicon-remove"></span>
+            <span locale-string="BTN_CANCEL"></span>
+          </button>
+        </div>
+
+      </div><!-- /.editable-image__select -->
+    </div><!-- /.business__cover-image -->
+  </div><!-- /.row -->
+
+  <div class="row">
+    <div class="business__top clearfix">
+
+      <div class="col-sm-7 col-md-6">
+        <div class="business__section business__section--details">
+          <div class="row">
+            <div class="col-sm-5 col-md-4 col-pr-4">
+              <!-- Logo -->
+              <div class="business__logo" ng-controller="Logo">
+                <div class="editable-image" ng-class="{'is-empty': !business.field_logo.und.length}">
+                  <img ng-show="business.field_logo.und.length" ng-src="{{business.field_logo.und[0].url}}" alt="" />
+                  <!-- Image edit -->
+                  <div class="editable-image__select" ng-show="canEdit">
+                    <div ng-hide="confirm">
+                      <span class="upload-wrapper" ng-hide="uploadProgress">
+                        <button class="btn btn-primary" ng-show="business.field_logo.und.length">
+                          <span class="glyphicon glyphicon-picture"></span>
+                          <span locale-string="BTN_CHANGE"></span>
+                        </button>
+                        <button class="btn btn-success" ng-hide="business.field_logo.und.length">
+                          <span class="glyphicon glyphicon-picture"></span>
+                          <span locale-string="BTN_ADD_LOGO"></span>
+                        </button>
+                        <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*" />
+                      </span>
+                      <button class="btn btn-danger" ng-click="confirm = true" ng-show="business.field_logo.und.length">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        <span locale-string="BTN_REMOVE"></span>
+                      </button>
+                      <button class="btn btn-default" ng-click="upload.abort()" ng-show="uploadProgress">
+                        <span locale-string="BTN_CANCEL"></span>
+                      </button>
+                    </div>
+
+                    <!-- Remove confirmation -->
+                    <div ng-show="confirm">
+                      <button class="btn btn-danger" ng-click="remove()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <span locale-string="BTN_CONFIRM"></span>
+                      </button>
+                      <button class="btn btn-default" ng-click="confirm = false">
+                        <span class="glyphicon glyphicon-remove"></span>
+                        <span locale-string="BTN_CANCEL"></span>
+                      </button>
+                    </div>
+
+                  </div><!-- /.editable-image__select -->
+                </div><!-- .editable-image -->
+              </div><!-- /.business__logo -->
+            </div><!-- /.col -->
+            <div class="col-sm-7 col-md-8 col-pr-8">
+              <div class="business__details-text" ng-controller="ProfileDetails">
+                <div ng-hide="editMode">
+                  <button class="business__edit-btn btn btn-primary" ng-click="edit()" ng-show="canEdit">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span locale-string="BTN_EDIT"></span>
+                  </button>
+
+                  <!-- Title -->
+                  <h1 class="business__name" ng-bind="selectLang(business.title_field)[0].value"></h1>
+                  <!-- Business Type -->
+                  <div class="business__category" ng-bind="businessTypes[business.field_business_type.und[0].tid].name"></div>
+                  <!-- Address -->
+                  <div class="business__address">
+                    <span class="business__thoroughfare" ng-show="business.field_address.und[0].thoroughfare.length">
+                      <span ng-bind="business.field_address.und[0].thoroughfare" dir="auto"></span>,
+                    </span>
+                    <span class="business__premise" ng-show="business.field_address.und[0].premise.length">
+                      <span ng-bind="business.field_address.und[0].premise" dir="auto"></span>,
+                    </span>
+                    <span class="business__locality" ng-show="business.field_address.und[0].locality.length">
+                      <span ng-bind="business.field_address.und[0].locality" dir="auto"></span>,
+                    </span>
+                    <span class="business__country" ng-show="business.field_address.und[0].country.length">
+                      <span ng-bind="countries[business.field_address.und[0].country]"></span>,
+                    </span>
+                    <span class="business__postal_code" ng-show="business.field_address.und[0].postal_code.length">
+                      <span ng-bind="business.field_address.und[0].postal_code" dir="auto"></span>
+                    </span>
+                  </div>
+                </div>
+
+                <div edit-spotlight="editMode" class="edit-spotlight--inner">
+                  <form class="business__form"
+                        name="$parent.form"
+                        ng-submit="save()"
+                        novalidate>
+
+                    <h2 locale-string="MSG_EDIT_BUSINESS_DETAILS"></h2>
+
+                    <div class="form-group row" ng-class="{'has-error': form.title.$invalid && submitted}">
+                      <label class="control-label col-sm-4" for="business-title" locale-string="LBL_BUSINESS_NAME"></label>
+                      <div class="col-sm-8">
+                        <input id="business-title"
+                                name="title"
+                                type="text"
+                                class="form-control"
+                                required
+                                ng-model="input.title">
+                        <p class="help-block error" ng-show="form.title.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                      </div>
+                    </div><!-- /.form-group -->
+
+                    <div class="form-group row" ng-class="{'has-error': form.type.$invalid && submitted}">
+                      <label class="control-label col-sm-4" for="business-type" locale-string="LBL_BUSINESS_TYPE"></label>
+                      <div class="col-sm-8">
+                        <select id="business-type"
+                                name="type"
+                                class="form-control"
+                                required
+                                ng-options="key as value.name for (key , value) in businessTypes"
+                                ng-model="input.type">
+                        </select>
+                        <p class="help-block error" ng-show="form.title.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                      </div>
+                    </div><!-- /.form-group -->
+
+                    <fieldset>
+                      <legend locale-string="LBL_ADDRESS"></legend>
+
+                      <div class="form-group row" ng-class="{'has-error': form.thoroughfare.$invalid && submitted}">
+                        <label class="control-label col-sm-4" for="business-thoroughfare" locale-string="LBL_ADDRESS_1"></label>
+                        <div class="col-sm-8">
+                          <input id="business-thoroughfare"
+                                  name="thoroughfare"
+                                  type="text"
+                                  class="form-control"
+                                  required
+                                  ng-model="input.address.thoroughfare">
+                          <p class="help-block error" ng-show="form.thoroughfare.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                        </div>
+                      </div><!-- /.form-group -->
+
+                      <div class="form-group row" ng-class="{'has-error': form.premise.$invalid && submitted}">
+                        <label class="control-label col-sm-4" for="business-premise" locale-string="LBL_ADDRESS_2"></label>
+                        <div class="col-sm-8">
+                          <input id="business-premise"
+                                  name="premise"
+                                  type="text"
+                                  class="form-control"
+                                  ng-model="input.address.premise">
+                        </div>
+                      </div><!-- /.form-group -->
+
+                      <div class="form-group row" ng-class="{'has-error': form.locaility.$invalid && submitted}">
+                        <label class="control-label col-sm-4" for="business-locaility" locale-string="LBL_LOCALITY"></label>
+                        <div class="col-sm-8">
+                          <input id="business-locaility"
+                                  name="locaility"
+                                  type="text"
+                                  class="form-control"
+                                  required
+                                  ng-model="input.address.locality">
+                          <p class="help-block error" ng-show="form.locaility.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                        </div>
+                      </div><!-- /.form-group -->
+
+                      <div class="form-group row" ng-class="{'has-error': form.postal_code.$invalid && submitted}">
+                        <label class="control-label col-sm-4" for="business-postal_code" locale-string="LBL_POST_CODE"></label>
+                        <div class="col-sm-8">
+                          <input id="business-postal_code"
+                                  name="postal_code"
+                                  type="text"
+                                  class="form-control"
+                                  required
+                                  ng-model="input.address.postal_code">
+                          <p class="help-block error" ng-show="form.postal_code.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                        </div>
+                      </div><!-- /.form-group -->
+
+                      <div class="form-group row" ng-class="{'has-error': form.locaility.$invalid && submitted}">
+                        <label class="control-label col-sm-4" for="business-country" locale-string="LBL_COUNTRY"></label>
+                        <div class="col-sm-8">
+                          <select id="business-country"
+                                  name="country"
+                                  class="form-control"
+                                  required
+                                  ng-model="input.address.country"
+                                  ng-options="key as value for (key , value) in countries">
+                          </select>
+                          <p class="help-block error" ng-show="form.country.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                        </div>
+                      </div><!-- /.form-group -->
+                    </fieldset>
+
+                    <div class="form-group row" ng-class="{'has-error': form.title.$invalid && submitted}">
+                      <div class="col-sm-push-4 col-sm-8">
+                        <button type="submit" class="btn btn-success" ng-click="save()" ng-disabled="progress">
+                          <span class="glyphicon glyphicon-ok"></span>
+                          <span locale-string="BTN_SAVE"></span>
+                        </button>
+                        <button type="button" class="btn btn-default" ng-click="cancel()" ng-disabled="progress">
+                          <span locale-string="BTN_CANCEL"></span>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div><!-- /.edit-spotlight -->
+
+                <!-- Opening hours -->
+                <div class="business__open" opening-hours="business.field_opening_hours.und"></div>
+
+              </div><!-- /.business__details-text -->
+
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+
+        </div><!-- /.business__section -->
+
+        <div class="business__section business__section--info" ng-controller="ProfileInfo">
+
+
+          <ul class="business__info-list" ng-hide="editMode">
+            <!-- Phone -->
+            <li class="business__info-item" ng-show="business.field_telephone.und.length">
+              <span class="business__info-icon"><span class="icon icon-phone"></span></span>
+              <span class="business__info-text">
+                <a ng-href="tel: {{business.field_telephone.und[0].value}}" ng-bind="business.field_telephone.und[0].value"></a>
+              </span>
+            </li>
+
+            <!-- Send message -->
+            <li class="business__info-item hidden-print" ng-show="business.field_email.und.length">
+              <span class="business__info-icon"><span class="icon icon-chat"></span></span>
+              <span class="business__info-text">
+                <a ng-href="{{baseUrl}}email/node/{{business.nid}}/field_email" locale-string="LNK_SEND_MESSAGE"></a>
+              </span>
+            </li>
+
+            <!-- Email -->
+            <li class="business__info-item" ng-show="business.field_email.und.length">
+                <span class="business__info-icon"><span class="icon icon-envelope"></span></span>
+                <span class="business__info-text">
+                  <a ng-href="mailto: {{business.field_email.und[0].email}}" ng-bind="business.field_email.und[0].email"></a>
+                </span>
+            </li>
+
+            <!-- Menu download -->
+            <li class="business__info-item hidden-print" ng-show="business.field_menu.und.length">
+              <span class="business__info-icon"><span class="icon icon-download"></span></span>
+              <span class="business__info-text">
+                <a ng-href="{{business.field_menu.und[0].url}}" locale-string="LNK_DOWNLOAD_MENU"></a>
+              </span>
+            </li>
+
+            <!-- Average price -->
+            <li class="business__info-item" ng-show="business.field_average_price.und.length">
+              <span class="business__info-icon">£</span>
+              <span class="business__info-text">
+                <span ng-bind="business.field_average_price.und[0].value | currency : '£'"></span>
+              </span>
+            </li>
+
+            <!-- Facilities -->
+            <li ng-repeat="term in business.field_facilities.und">
+              <span class="business__info-icon"><span class="icon icon-{{facilities[term.tid].icon}}"></span></span>
+              <span class="business__info-text" ng-bind="facilities[term.tid].name"></span>
+            </li>
+
+          </ul><!-- /.business__info-list -->
+
+          <!-- Edit button -->
+          <button class="business__info-edit-btn btn btn-primary"
+                  ng-click="edit()" ng-show="canEdit && !showForm && !businessInfoIsEmpty()">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span locale-string="BTN_EDIT"></span>
+          </button>
+
+          <div ng-show="canEdit && !showForm && businessInfoIsEmpty()" class="alert alert-info" role="alert">
+            <div>
+              <p locale-string="MSG_EMPTY_BUSINESS_DETAILS"></p>
+              <button class="btn btn-primary" ng-click="edit()"><span class="glyphicon glyphicon-th"></span>
+                <span locale-string="BTN_ADD_BUSINESS_DETAILS"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Edit -->
+          <div edit-spotlight="editMode" class="edit-spotlight--inner">
+            <form name="$parent.form"
+                  ng-submit="save()"
+                  novalidate>
+
+              <h2 locale-string="MSG_EDIT_BUSINESS_DETAILS"></h2>
+
+              <div class="form-group row" ng-class="{'has-error': form.telephone.$invalid && submitted}">
+                <div class="col-sm-4">
+                  <label class="control-label" for="profile-telephone" locale-string="LBL_TELEPHONE"></label>
+                  <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+                </div>
+
+                <div class="col-sm-8">
+                  <input required id="profile-telephone"
+                         name="telephone"
+                         class="form-control"
+                         ng-model="$parent.input.telephone">
+                  <p class="help-block error" ng-show="form.telephone.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                </div>
+              </div><!-- /.form-group -->
+
+              <div class="form-group row" ng-class="{'has-error': form.email.$invalid && submitted}">
+
+                <div class="col-sm-4">
+                  <label class="control-label" for="profile-email" locale-string="LBL_EMAIL"><span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span></label>
+                  <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+                </div>
+
+                <div class="col-sm-8">
+                  <input required id="profile-email"
+                         name="email"
+                         type="email"
+                         class="form-control"
+                         ng-model="$parent.input.email">
+
+                  <p class="help-block error" ng-show="form.email.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                </div>
+              </div><!-- /.form-group -->
+
+              <div class="form-group row" ng-class="{'has-error': form.average_price.$invalid && submitted}">
+
+                <div class="col-sm-4">
+                  <label class="control-label" for="profile-average_price" locale-string="LBL_AVERAGE_PRICE"><span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span></label>
+                  <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+                </div>
+
+                <div class="col-sm-8">
+                  <input required id="profile-average_price"
+                         name="average_price"
+                         class="form-control"
+                         ng-model="$parent.input.average_price">
+
+                  <p class="help-block error" ng-show="form.average_price.$error.required && submitted" locale-string="MSG_REQUIRED_FIELD"></p>
+                </div>
+              </div><!-- /.form-group -->
+
+              <div class="form-group row">
+                <label class="control-label col-sm-4" locale-string="LBL_FACILITIES"></label>
+                <div class="col-sm-8">
+                  <div ng-repeat="facility in $parent.facilities">
+                    <input type="checkbox" ng-model="$parent.input.facilities[facility.tid]"> {{ facility.name }}
+                  </div>
+                </div>
+              </div><!-- /.form-group -->
+
+              <div class="form-group row">
+                <label class="control-label col-sm-4" locale-string="LBL_MENU"></label>
+                <div class="col-sm-8">
+                  <div ng-show="$parent.input.field_menu">
+                    <span>{{ $parent.input.field_menu['filename'] }}</span>
+                    <a class="btn btn-danger" ng-click="removeMenuFile()"><span class="glyphicon glyphicon-remove"></span></a>
+                  </div>
+                  <input type="file" ng-file-select="onFileSelect($files)" accept="application/pdf" />
+                </div>
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <button class="btn btn-success" type="submit" ng-disabled="progress">
+                          <span ng-hide="editIndex !== null">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span locale-string="BTN_ADD"></span>
+                          </span>
+                  <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+                </button>
+                <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+              </div><!-- /.form-group -->
+            </form>
+          </div><!-- /.edit-spotlight -->
+
+
+        </div><!-- /.business__section -->
+
+        <div class="business__section business__section--description">
+          <!-- Description (body) -->
+          <div ng-controller="ProfileDescription">
+
+            <!-- Edit button -->
+            <div class="business__description-edit-btn-container" ng-show="canEdit && !showForm && selectLang(business.body)[0].value">
+
+              <button class="business__description-edit-btn btn btn-primary" ng-click="startEdit()">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <span locale-string="BTN_EDIT_DESCRIPTION"></span> (<current-language-code-label></current-language-code-label>)
+              </button>
+
+              <switch-language-button field-name="'body'" field="business.body"></switch-language-button>
+
+            </div>
+
+            <!-- Empty text -->
+            <div ng-show="canEdit && !selectLang(business.body)[0].value && !editMode" class="alert alert-info" role="alert">
+              <div>
+                <p locale-string="MSG_EMPTY_DESCRIPTION"></p>
+                <button class="btn btn-primary" ng-click="startEdit()">
+                  <span class="glyphicon glyphicon-heart"></span>
+                  <span locale-string="BTN_ADD_DESCRIPTION"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- View -->
+            <div class="business__description"
+                 ng-show="!editMode && selectLang(business.body)[0].value"
+                 use-field-language="business.body"
+                 expand-more="6.8em">
+              <div ng-bind-html="selectLang(business.body)[0].safe_value"></div>
+            </div><!-- /.business__description -->
+
+            <!-- Edit -->
+            <div edit-spotlight="editMode" class="edit-spotlight--inner">
+              <form name="$parent.form"
+                    ng-submit="save()"
+                    novalidate>
+
+                <h2 locale-string="MSG_EDIT_BUSINESS_DESCRIPTION"></h2>
+
+                <div class="form-group" ng-class="{'has-error': form.description.$invalid && submitted}">
+                  <label class="control-label sr-only" for="profile-description" locale-string="LBL_DESCRIPTION"></label>
+                  <textarea id="profile-description"
+                            rows="6"
+                            name="description"
+                            class="form-control"
+                            ckeditor="editorOptions"
+                            ng-model="$parent.input.description"></textarea>
+                </div><!-- /.form-group -->
+
+                <div class="form-group">
+                  <switch-language-note field-name="'body'" field="business.body" help-text-header="'MSG_SWITCH_LANGUAGE_BUSINESS_DESCRIPTION'" edit-mode="editMode"></switch-language-note>
+                </div>
+
+                <div class="form-group">
+                  <button class="btn btn-success" type="submit" ng-disabled="progress">
+                    <span ng-hide="editIndex !== null">
+                      <span class="glyphicon glyphicon-plus"></span>
+                      <span locale-string="BTN_ADD"></span>
+                    </span>
+                    <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+                  </button>
+                  <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+                </div><!-- /.form-group -->
+              </form>
+            </div><!-- /.edit-spotlight -->
+
+          </div>
+        </div><!-- /.business__section -->
+      </div><!-- /.col -->
+
+      <div class="col-sm-5 col-md-6">
+        <div class="business__section business__section--map">
+          <!-- Map -->
+          <leaflet id="map" class="business__map" center="map.center" defaults="map.defaults" markers="map.markers" paths="map.paths"></leaflet>
+
+          <div class="directions" ng-controller="Directions" ng-cloak>
+            <section class="directions__route" ng-show="route.steps.length">
+              <header class="well">
+                <span class="directions__header-icon glyphicon glyphicon-map-marker"></span>
+                <div class="directions__summary">
+                  <h2 class="directions__title" ng-bind="'MSG_DIRECTIONS_FROM' | localeString:{'!location': route.start_address}"></h2>
+                  <div class="directions__duration" ng-bind="'MSG_DIRECTIONS_SUMMARY' | localeString: {
+                    '!distance': route.distance.text,
+                    '!duration': route.duration.text
+                  }"></div>
+                </div>
+              </header>
+              <ol class="directions__steps">
+                <li class="directions__step" ng-repeat="(i, step) in route.steps" ng-click="showStep(i)">
+                  <div class="directions__step-distance" ng-bind="step.distance.text"></div>
+                  <div class="directions__step-instruction" ng-bind-html="step.instructions"></div>
+                </li>
+              </ol>
+            </section><!-- /.directions__route -->
+
+            <form class="directions__form"
+                  name="form"
+                  novalidate
+                  ng-submit="getDirections()"
+                  ng-show="showDirectionsForm">
+              <div class="alert alert alert-danger" ng-show="error.length" ng-bind="error"></div>
+
+              <div class="form-group" ng-class="{'has-error': form.location.$invalid && submitted}">
+                <label locale-string="LBL_GET_DIRECTIONS"></label>
+                <input type="text"
+                    name="location"
+                    class="form-control"
+                    required
+                    ng-model="location"
+                    placeholder="{{'LBL_FROM' | localeString}}"
+                    location-field
+                    location-field-geo="geo">
+              </div>
+              <div class="form-group">
+                <div class="btn-group">
+                  <label class="btn btn-default btn-sm" ng-model="mode" btn-radio="'DRIVING'" locale-string="LBL_DRIVING"></label>
+                  <label class="btn btn-default btn-sm" ng-model="mode" btn-radio="'BICYCLING'" locale-string="LBL_CYCLING"></label>
+                  <label class="btn btn-default btn-sm" ng-model="mode" btn-radio="'TRANSIT'" locale-string="LBL_TRANSIT"></label>
+                  <label class="btn btn-default btn-sm" ng-model="mode" btn-radio="'WALKING'" locale-string="LBL_WALKING"></label>
+                </div><!-- /.search-results__view-modes -->
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary" ng-disabled="loading">
+                  <span class="glyphicon glyphicon-arrow-right"></span>
+                  <span locale-string="BTN_GO"></span>
+                </button>
+                <button type="button" class="btn btn-default" ng-click="$parent.showDirectionsForm = false" ng-disabled="loading">
+                  <span locale-string="BTN_CANCEL"></span>
+                </button>
+              </div>
+            </form><!-- /.directions__form -->
+          </div><!-- /.directions -->
+
+          <!-- Actions -->
+          <div class="business__actions hidden-print" ng-hide="showDirectionsForm">
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-share"></span>
+                <span locale-string="BTN_SHARE"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ng-href="https://www.facebook.com/sharer/sharer.php?u={{url}}"><span class="icon icon-facebook"></span> Facebook</a></li>
+                <li><a ng-href="https://twitter.com/share?url={{url}}"><span class="icon icon-twitter"></span> Twitter</a></li>
+                <li><a ng-href="https://plus.google.com/share?url={{url}}"><span class="icon icon-googleplus"></span> Google+</a></li>
+              </ul>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-default" ng-click="print()">
+              <span class="glyphicon glyphicon-print"></span>
+              <span locale-string="BTN_PRINT"></span>
+            </button>
+
+            <button type="button" class="btn btn-sm btn-default" ng-click="showDirectionsForm = true">
+              <span class="glyphicon glyphicon-arrow-right"></span>
+              <span locale-string="BTN_GET_DIRECTIONS"></span>
+            </button>
+          </div><!-- /.business__actions -->
+        </div><!-- /.business__section -->
+      </div><!-- /.col -->
+
+    </div><!-- /.business__top -->
+  </div><!-- /.row -->
+
+  <div class="row business__main" ng-show="specials.length || canEdit">
+    <div class="col-sm-12">
+      <section class="business__section business__section--specials">
+        <h2 class="business__section-title" locale-string="MSG_SPECIALS">></h2>
+        <div ng-include="'business/views/specials.html'"></div>
+      </section><!-- /.business__section -->
+    </div><!-- /.col -->
+  </div>
+
+  <div class="row hidden-print" ng-show="business.field_gallery.und.length || canEdit">
+    <div class="business__main clearfix">
+
+      <div class="col-sm-12">
+        <section class="business__section business__section--gallery" ng-show="business.field_gallery.und.length || canEdit">
+          <h2 class="business__section-title" locale-string="MSG_GALLERY"></h2>
+          <div ng-include="'business/views/gallery.html'"></div>
+        </section><!-- /.business__section -->
+      </div><!-- /.col -->
+    </div><!-- /.business__main -->
+  </div><!-- /.row -->
+
+  <div class="row" ng-show="business.field_team.und.length || canEdit">
+    <div class="business__bottom clearfix">
+      <div class="col-sm-12">
+        <section class="business__section business__section--team">
+          <h2 class="business__section-title" locale-string="MSG_TEAM"></h2>
+          <div ng-include="'business/views/team.html'"></div>
+        </section><!-- /.business__section -->
+      </div><!-- /.col -->
+    </div><!-- /.business__bottom -->
+  </div><!-- /.row -->
+
+  <switch-language-popup></switch-language-popup>
+
+</div><!-- /.business -->

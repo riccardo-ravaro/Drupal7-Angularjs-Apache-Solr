@@ -1,0 +1,242 @@
+<div class="team" ng-controller="Team">
+
+  <!-- Edit button -->
+  <div class="edit-btn-container" ng-show="canEdit && !showForm && members.length">
+    <button class="btn btn-primary" ng-click="startEdit()">
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span locale-string="BTN_EDIT_TEAM"></span>  (<current-language-code-label></current-language-code-label>)
+    </button>
+    <switch-language-button obj="members"></switch-language-button>
+  </div>
+
+  <!-- Empty text -->
+  <div ng-show="canEdit && !members.length && !editMode" class="alert alert-info" role="alert">
+    <div>
+      <p locale-string="MSG_EMPTY_TEAM"></p>
+      <button class="btn btn-primary" ng-click="startEdit()">
+        <span class="glyphicon glyphicon-user"></span>
+        <span locale-string="BTN_ADD_TEAM_MEMBER"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="team__slider">
+    <div class="team__members"
+        slick-slider-dynamic="slickOptions"
+        slick-slider-dynamic-template-url="business/views/team-slider.html"
+        slick-slider-dynamic-items="members"
+        slick-slider-dynamic-items-name="memberItems"
+        ng-show="members.length && !editMode">
+    </div>
+  </div>
+
+  <div edit-spotlight="editMode" edit-spotlight-done-btn="true">
+    <!-- Drag help text -->
+    <div class="edit-spotlight__help" ng-show="members.length > 1 && !showForm">
+      <span class="glyphicon glyphicon-move"></span>
+      <span locale-string="MSG_DRAG_IMAGES"></span>
+    </div>
+
+    <!-- Draggable version of team -->
+    <ul id="team-drag"
+        class="team__members team__members--sortable"
+        sortable="{dragEnd: dragEnd, containment: '#team-drag'}"
+        ng-model="members"
+        ng-hide="showForm">
+      <li sortable-item ng-repeat="member in members">
+        <div class="team-member">
+          <div sortable-item-handle ng-hide="confirmIndex === $index">
+            <div class="team-member__image">
+              <img ng-src="{{member.field_image.und[0].url | imageStyle: 'team_thumbnail'}}" alt="" />
+            </div>
+            <div class="team-member__content">
+              <h3 class="team-member__name">{{selectLang(member.field_full_name)[0].value}}</h3>
+              <div class="team-member__role">{{selectLang(member.field_job_title)[0].value}}</div>
+            </div>
+          </div>
+
+          <div ng-show="confirmIndex === $index">
+            <div class="team-member__image">
+              <img ng-src="{{member.field_image.und[0].url | imageStyle: 'team_thumbnail'}}" alt="" />
+
+              <!-- Remove confirmation -->
+              <div class="team-member__remove">
+                <p locale-string="MSG_CONFIRM_REMOVE_TEAM_MEMBER"></p>
+                <button class="btn btn-danger" ng-click="remove($index)">
+                  <span class="glyphicon glyphicon-ok"></span>
+                  <span locale-string="BTN_REMOVE"></span>
+                </button>
+                <button class="btn btn-default" ng-click="cancel();">
+                  <span class="glyphicon glyphicon-remove"></span>
+                  <span locale-string="BTN_CANCEL"></span>
+                </button>
+              </div><!-- /.team-member__remove -->
+            </div>
+          </div>
+
+          <!-- Edit / remove options -->
+          <div class="team-member__options" ng-hide="confirmIndex === $index">
+            <button class="btn btn-default btn-sm" ng-click="edit($index); $event.stopPropagation();" tooltip="{{'BTN_EDIT' | localeString}}" tooltip-trigger="hover">
+              <span class="glyphicon glyphicon-pencil"></span>
+              <span class="sr-only" locale-string="BTN_EDIT"></span>
+            </button>
+            <button class="btn btn-danger btn-sm" ng-click="confirmRemove($index); $event.stopPropagation();" tooltip="{{'BTN_REMOVE' | localeString}}" tooltip-trigger="hover">
+              <span class="glyphicon glyphicon-remove"></span>
+              <span class="sr-only" locale-string="BTN_REMOVE"></span>
+            </button>
+          </div><!-- /.team-member__options -->
+
+        </div>
+      </li><li>
+        <div class="team__add-btn">
+          <button class="btn btn-primary btn-lg btn-team" ng-click="add()">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span locale-string="BTN_ADD_TEAM_MEMBER"></span>
+          </button>
+        </div>
+      </li>
+    </ul><!-- /.team__thumbs -->
+
+    <!-- Add / edit form -->
+    <form class="team__form"
+          name="$parent.form"
+          ng-show="showForm"
+          ng-submit="submit()"
+          novalidate>
+
+      <h3>
+        <span ng-hide="editIndex !== null" locale-string="MSG_ADD_TEAM_MEMBER"></span>
+        <span ng-show="editIndex !== null" locale-string="MSG_EDIT_TEAM_MEMBER"></span>
+      </h3>
+
+      <div ng-show="error != null" class="alert alert-danger" role="alert" ng-bind="error"></div>
+
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="form-group" ng-class="{'has-error': form.image.$invalid && submitted}">
+            <label class="control-label" for="team-image">
+              <span locale-string="LBL_IMAGE"></span>
+              <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+            </label>
+            <div class="team__upload-preview">
+              <img ng-if="input.image != null" ng-src="{{input.image.url | imageStyle: 'thumbnail'}}" alt="Preview" />
+            </div>
+            <input id="team-image"
+                    required
+                    name="image"
+                    type="file"
+                    class="form-control"
+                    ng-file-select="onFileSelect($files)"
+                    accept="image/*" />
+            <p class="help-block error" ng-show="!input.image && submitted" locale-string="ERR_REQUIRED">
+            </p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.team_name.$invalid && submitted}">
+            <label class="control-label" for="team-name">
+              <span locale-string="LBL_NAME"></span>
+              <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+            </label>
+            <input id="team-name"
+                    name="team_name"
+                    type="text"
+                    class="form-control"
+                    required
+                    ng-model="input.name" />
+            <p class="help-block error" ng-show="form.team_name.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.role.$invalid && submitted}">
+            <label class="control-label" for="team-role">
+              <span locale-string="LBL_JOB_TITLE"></span>
+              <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+            </label>
+            <input id="team-role"
+                    name="role"
+                    type="text"
+                    class="form-control"
+                    required
+                    ng-model="input.role" />
+            <p class="help-block error" ng-show="form.role.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+        </div><!-- /.col -->
+
+
+        <div class="col-md-6">
+
+          <div class="form-group" ng-class="{'has-error': form.field_facebook.$invalid && submitted}">
+            <label class="control-label" for="team-field_facebook">
+              <span>Facebook</span>
+            </label>
+            <input id="team-field_facebook"
+                   name="field_facebook"
+                   type="text"
+                   class="form-control"
+                   ng-model="input.field_facebook" />
+            <p class="help-block error" ng-show="form.field_facebook.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.field_twitter.$invalid && submitted}">
+            <label class="control-label" for="team-field_twitter">
+              <span>Twitter</span>
+            </label>
+            <input id="team-field_twitter"
+                   name="field_twitter"
+                   type="text"
+                   class="form-control"
+                   ng-model="input.field_twitter" />
+            <p class="help-block error" ng-show="form.field_twitter.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.field_linkedin.$invalid && submitted}">
+            <label class="control-label" for="team-field_linkedin">
+              <span>Linkedin</span>
+            </label>
+            <input id="team-field_linkedin"
+                   name="field_linkedin"
+                   type="text"
+                   class="form-control"
+                   ng-model="input.field_linkedin" />
+            <p class="help-block error" ng-show="form.field_linkedin.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.field_googleplus.$invalid && submitted}">
+            <label class="control-label" for="team-field_googleplus">
+              <span>Google +</span>
+            </label>
+            <input id="team-field_googleplus"
+                   name="field_googleplus"
+                   type="text"
+                   class="form-control"
+                   ng-model="input.field_googleplus" />
+            <p class="help-block error" ng-show="form.field_googleplus.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+          </div><!-- /.form-group -->
+
+          <div class="form-group" ng-class="{'has-error': form.description.$invalid && submitted}">
+            <label class="control-label" for="team-description" locale-string="LBL_DESCRIPTION"></label>
+            <textarea id="team-description"
+                    ng-if="showForm"
+                    name="description"
+                    class="form-control"
+                    ckeditor="editorOptions"
+                    ng-model="input.description"></textarea>
+          </div><!-- /.form-group -->
+        </div><!-- /.col -->
+
+      </div><!-- /.row -->
+
+      <div class="form-group">
+        <button class="btn btn-success" type="submit" ng-disabled="progress">
+          <span ng-hide="editIndex !== null">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span locale-string="BTN_ADD"></span>
+          </span>
+          <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+        </button>
+        <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+      </div>
+    </form><!-- /.team__form -->
+
+  </div><!-- /.edit-spotlight -->
+</div>

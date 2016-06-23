@@ -1,0 +1,38 @@
+span.twitter-typeahead {
+  .tt-dropdown-menu {
+    @extend .dropdown-menu;
+  }
+
+  .tt-suggestion > p {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+    &:hover,
+    &:focus {
+      color: #ffffff;
+      text-decoration: none;
+      outline: 0;
+      background-color: #428bca;
+    }
+  }
+  .input-group & {
+    display: block !important;
+    .tt-dropdown-menu {
+      top: 32px !important;
+    }
+  }
+  .input-group.input-group-lg & {
+  .tt-dropdown-menu {
+      top: 44px !important;
+    }
+  }
+  .input-group.input-group-sm & {
+  .tt-dropdown-menu {
+      top: 28px !important;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+.navbar-toggle-left {
+  float: $dir-default;
+  margin-#{$dir-default}: 20px;
+  margin-#{$dir-opposite}: 0;
+}
+
+.navbar-brand {
+  padding-top: ($navbar-height - 22px) / 2;
+  padding-bottom: ($navbar-height - 22px) / 2;
+}
+
+.navbar-form {
+  @include box-shadow(none);
+  padding: 0;
+  border: none;
+  &:before,
+  &:after {
+    border: none;
+  }
+}
+
+.navbar-collapse {
+  // Overflow visible (which we need for typeahead competion) breaks transition.
+  @include transition(none);
+  &.in {
+    overflow: visible !important;
+  }
+  .navbar-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.navbar-toggle .icon-bar {
+  border-radius: 0;
+  height: 3px;
+  margin-top: 3px;
+}
+
+.navbar-toggle .icon-bar + .icon-bar {
+  margin-top: 5px;
+}

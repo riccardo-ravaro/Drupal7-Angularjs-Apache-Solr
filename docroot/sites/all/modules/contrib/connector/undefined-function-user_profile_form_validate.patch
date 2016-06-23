@@ -1,0 +1,27 @@
+diff --git a/connector.pages.inc b/connector.pages.inc
+index 24c9252..1af9c37 100644
+--- a/connector.pages.inc
++++ b/connector.pages.inc
+@@ -266,9 +266,22 @@ function connector_user_sync_form($form, &$form_state, $account, $cid) {
+     '#type' => 'submit',
+     '#value' => t('Save sync with @title', array('@title' => $connector['title'])),
+   );
++  
++  // Add a validate element so that we can load user.pages.inc to prevent fatal errors.
++  array_unshift($form['#validate'], 'connector_user_sync_form_validate');
++  
+   return $form;
+ }
+ 
++/**
++ * Dummy validation loads user.pages.inc for the other validations
++ */
++function connector_user_sync_form_validate($form, $form_state) {
++  module_load_include('inc', 'user', 'user.pages');
++}
++
++
++
+ function connector_user_sync_form_first_submit($form, &$form_state) {
+ 
+   $form_state['redirect'] = 'user';

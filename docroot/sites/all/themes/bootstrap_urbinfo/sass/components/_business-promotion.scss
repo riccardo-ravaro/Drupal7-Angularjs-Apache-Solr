@@ -1,0 +1,18 @@
+.business-promotion {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  position: relative;
+  overflow: hidden;
+}
+
+.business-promotion__image {
+  float: $dir-default;
+  margin-#{$dir-opposite}: 1em;
+}
+
+.business-promotion__actions {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+}

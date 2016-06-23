@@ -1,0 +1,63 @@
+<div ng-hide="editMode">
+  <div ng-hide="showDetail" class="hidden-print">
+    <span ng-show="days[today]">
+      <b><span locale-string="MSG_OPEN_TODAY"></span>:</b>
+      <span ng-repeat="period in days[today]" dir="auto">{{period.start | date:'shortTime'}}–{{period.end | date:'shortTime'}}{{$last ? '' : ', '}}</span>
+    </span>
+    <span ng-hide="days[today]" locale-string="MSG_CLOSED_TODAY"></span>
+    <a href="" ng-click="showDetail = true" locale-string="LNK_MORE"></a>
+  </div>
+
+  <a href="" ng-click="showDetail = false" ng-show="showDetail" locale-string="LNK_HIDE"></a>
+
+  <div class="business__open-list" ng-class="{'is-open': showDetail}">
+    <table class="table table-striped">
+      <tr ng-repeat="dayName in dayNames" ng-class="{info: (today == dayName)}">
+        <th>{{dayName}}</th>
+        <td>
+          <div ng-repeat="period in days[dayName]">
+            <span dir="auto">
+              {{period.start | date:'shortTime'}}–{{period.end | date:'shortTime'}}
+            </span>
+          </div>
+          <div ng-hide="days[dayName]" locale-string="MSG_CLOSED"></div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Edit button -->
+    <button class="business__edit-btn btn btn-primary" ng-click="edit()" ng-show="canEdit && !showForm">
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span locale-string="BTN_EDIT"></span>
+    </button>
+
+  </div>
+</div>
+
+<!-- Edit -->
+<div edit-spotlight="editMode" class="edit-spotlight--inner">
+  <form name="$parent.form"
+        ng-submit="save()"
+        novalidate ng-class="{'has-errors': form.$invalid && submitted}">
+
+    <h2 locale-string="MSG_EDIT_OPENING_HOURS"></h2>
+
+    <div ng-repeat="dayName in dayNames" class="form-group row" ng-class="{info: (today == dayName)}">
+      <div class="col-sm-3"><label class="control-label ">{{ dayName }}</label></div>
+      <div class="col-sm-9">
+        <from-to-hours name="'{{ dayName }}'" ng-model="input.days[dayName]"></from-to-hours>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-success" type="submit" ng-disabled="progress">
+        <span ng-hide="editIndex !== null">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span locale-string="BTN_ADD"></span>
+        </span>
+        <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+      </button>
+      <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+    </div><!-- /.form-group -->
+  </form>
+</div><!-- /.edit-spotlight -->

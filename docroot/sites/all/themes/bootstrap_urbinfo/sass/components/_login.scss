@@ -1,0 +1,78 @@
+.login_signup__separator {
+  border-bottom: 1px solid #E4E4E4;
+  margin-bottom: 21px;
+  margin-top: 21px;
+  position: relative;
+
+  .inner {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: -17px;
+    text-align: center;
+
+    i {
+      background: #fff;
+      text-transform: uppercase;
+      font-style: normal;
+      display:inline-block;
+      padding: 8px 8px;
+    }
+  }
+}
+
+.login_signup__big_btn {
+  padding: 16px 12px;
+  font-size: 18px;
+}
+
+.login__forgot {
+  float: right;
+  margin-top: 7px;
+}
+
+
+.login-modal {
+
+  .form-control {
+    line-height: 44px;
+    height: 44px;
+  }
+
+  .modal-dialog {
+    width: 330px;
+    margin: 100px auto 0 auto;
+  }
+
+  .modal-content {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 0 5px rgba(48,48,48,.5);
+    -moz-box-shadow: 0 0 5px rgba(48,48,48,.5);
+    box-shadow: 0 0 5px rgba(48,48,48,.5);
+  }
+
+  .modal-footer {
+    background: url(../images/login-bg.png) repeat top left;
+    text-align: center;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+  }
+
+  .connector-button-wrapper, .connector-button {
+    width: 100%;
+    display: block;
+  }
+
+  label {
+    font-weight: normal;
+  }
+}
+
+#login-signup_agree {
+  margin-right: 10px;
+}

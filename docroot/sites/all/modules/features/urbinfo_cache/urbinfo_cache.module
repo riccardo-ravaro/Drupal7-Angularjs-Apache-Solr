@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo cache feature.
+ */
+
+include_once 'urbinfo_cache.features.inc';

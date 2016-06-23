@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo news feature.
+ */
+
+include_once 'urbinfo_news.features.inc';

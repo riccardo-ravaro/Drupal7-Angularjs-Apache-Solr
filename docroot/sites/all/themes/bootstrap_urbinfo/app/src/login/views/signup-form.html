@@ -1,0 +1,52 @@
+<form class="signup" novalidate name="signupForm" ng-submit="submit()" ng-controller="SignupForm">
+
+  <div class="login_signup__separator"><div class="inner"><i locale-string="MSG_OR"></i></div></div>
+
+  <div>
+    <a ng-click="showForm()" ng-show="signupFormVisible == false" class="btn btn-primary btn-block login_signup__big_btn">Register via e-mail address</a>
+
+    <div ng-show="signupFormVisible == true">
+
+      <div class="alert alert-danger login__error" ng-show="error" locale-string="ERR_INVALID_LOGIN"></div>
+
+      <div ng-class="{'has-error': signupForm.field_full_name.$invalid && submitted}" class="form-group">
+        <label class="sr-only" for="login-field_full_name" locale-string="LBL_EMAIL"></label>
+        <input id="login-field_full_name" name="field_full_name" type="text" class="form-control" placeholder="{{'LBL_NAME' | localeString}}" ng-model="field_full_name" required />
+        <p class="help-block error" ng-show="signupForm.field_full_name.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+        <p class="help-block error" ng-show="submitted && formErrors['field_full_name']" ng-bind-html="formErrors['field_full_name']"></p>
+      </div>
+
+      <div ng-class="{'has-error': signupForm.mail.$invalid && submitted}" class="form-group">
+        <label class="sr-only" for="login-mail" locale-string="LBL_EMAIL"></label>
+        <input id="login-mail" name="mail" type="email" class="form-control" placeholder="{{'LBL_EMAIL' | localeString}}" ng-model="mail" required />
+        <p class="help-block error" ng-show="signupForm.mail.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+        <p class="help-block error" ng-show="signupForm.mail.$error.mail && submitted" locale-string="ERR_INVAID_EMAIL"></p>
+        <p class="help-block error" ng-show="submitted && formErrors['mail']" ng-bind-html="formErrors['mail']"></p>
+        <p class="help-block error" ng-show="submitted && formErrors['name']" ng-bind-html="formErrors['name']"></p>
+      </div>
+
+      <!--<div ng-class="{'has-error': signupForm.pass.$invalid && submitted}" class="form-group">
+        <label class="sr-only" for="login-pass" locale-string="LBL_PASSWORD"></label>
+        <input id="login-pass" ng-minlength="5" name="pass" class="form-control" type="password" placeholder="{{'LBL_PASSWORD' | localeString}}" ng-model="pass" required />
+        <p class="help-block error" ng-show="signupForm.pass.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+        <p class="help-block error" ng-show="signupForm.pass.$error.minlength && submitted" locale-string="ERR_PASSWORD_5_MINLENGTH"></p>
+        <p class="help-block error" ng-show="submitted && formErrors['pass']" ng-bind-html="formErrors['pass']"></p>
+      </div>
+
+      <div ng-class="{'has-error': signupForm.pass_confirm.$invalid && submitted}" class="form-group">
+        <label class="sr-only" for="login-pass-confirm" locale-string="LBL_PASSWORD_CONFIRM"></label>
+        <input compare-to="pass" ng-minlength="5" id="login-pass-confirm" name="pass_confirm" class="form-control" type="password" placeholder="{{'LBL_PASSWORD_CONFIRM' | localeString}}" ng-model="pass_confirm" required />
+        <p class="help-block error" ng-show="signupForm.pass_confirm.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+        <p class="help-block error" ng-show="signupForm.pass_confirm.$error.compareTo && submitted" locale-string="ERR_PASSWORDS_DONT_MATCH"></p>
+      </div>-->
+
+      <div ng-class="{'has-error': signupForm.signup_agree.$invalid && submitted}" class="form-group">
+        <input name="signup_agree" id="login-signup_agree" type="checkbox" ng-model="signup_agree" required> <label for="login-signup_agree" locale-string="LBL_AGREE_WITH_TERMS"></label>
+        <p class="help-block error" ng-show="signupForm.signup_agree.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+      </div>
+
+      <button class="btn-primary btn form-submit btn-block" ng-disabled="loading || !signup_agree" type="submit" locale-string="BTN_SIGNUP"></button>
+    </div>
+
+  </div>
+</form>

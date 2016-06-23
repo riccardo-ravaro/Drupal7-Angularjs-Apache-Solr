@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo_i18n feature.
+ */
+
+include_once 'urbinfo_i18n.features.inc';

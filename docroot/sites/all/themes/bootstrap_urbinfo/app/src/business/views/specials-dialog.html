@@ -1,0 +1,14 @@
+<div class="clearfix specials__dialog" slick-slider="slickInPopupOptions">
+  <div ng-repeat="special in specials">
+    <div>
+      <div class="special__image" ng-if="special.field_image.und.length">
+        <img class="img-responsive" ng-src="{{special.field_image.und[0].url | imageStyle: 'special_list'}}" alt="" />
+      </div>
+      <div class="special__content">
+        <h3 class="special__title">{{ selectLang(special.title_field)[0].value }}</h3>
+        <div ng-show="special.field_valid_till.und[0].value" class="special__valid_till"><b><span locale-string="LBL_VALID_TILL"></span>:</b>  {{ special.field_valid_till.und[0].value | date:'longDate' }}</div>
+        <div class="special__description" ng-bind-html="selectLang(special.body)[0].safe_value"></div>
+      </div>
+    </div>
+  </div><!-- /.special -->
+</div>

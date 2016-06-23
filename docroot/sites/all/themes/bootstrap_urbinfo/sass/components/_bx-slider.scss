@@ -1,0 +1,253 @@
+/**
+ * BxSlider v4.1.2 - Fully loaded, responsive content slider
+ * http://bxslider.com
+ *
+ * Written by: Steven Wanderski, 2014
+ * http://stevenwanderski.com
+ * (while drinking Belgian ales and listening to jazz)
+ *
+ * CEO and founder of bxCreative, LTD
+ * http://bxcreative.com
+ */
+
+
+/** RESET AND LAYOUT
+===================================*/
+
+.bx-wrapper {
+  position: relative;
+  margin: 0 auto 60px;
+  padding: 0;
+  *zoom: 1;
+  direction: ltr;
+
+  img {
+    max-width: 100%;
+    display: block;
+    @include transition(opacity(1s));
+    opacity: 1;
+    &.lazy {
+      opacity: 0;
+    }
+  }
+
+  /** THEME
+  ===================================*/
+
+  .bx-viewport {
+    // -moz-box-shadow: 0 0 5px #ccc;
+    // -webkit-box-shadow: 0 0 5px #ccc;
+    // box-shadow: 0 0 5px #ccc;
+    // border:  5px solid #fff;
+    // left: -5px;
+    // background: #fff;
+
+    /*fix other elements on the page moving (on Chrome)*/
+    -webkit-transform: translatez(0);
+    -moz-transform: translatez(0);
+        -ms-transform: translatez(0);
+        -o-transform: translatez(0);
+        transform: translatez(0);
+  }
+
+  .bx-pager,
+  .bx-controls-auto {
+    position: absolute;
+    bottom: -30px;
+    width: 100%;
+  }
+
+  /* LOADER */
+
+  .bx-loading {
+    min-height: 50px;
+    background: url(../images/bx_loader.gif) center center no-repeat #fff;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    #{$dir-default}: 0;
+    z-index: 2000;
+  }
+
+  /* PAGER */
+
+  .bx-pager {
+    text-align: center;
+    font-size: .85em;
+    font-family: Arial;
+    font-weight: bold;
+    color: #666;
+    padding-top: 20px;
+  }
+
+  .bx-pager .bx-pager-item,
+  .bx-controls-auto .bx-controls-auto-item {
+    display: inline-block;
+    *zoom: 1;
+    *display: inline;
+  }
+
+  .bx-pager.bx-default-pager a {
+    background: #666;
+    text-indent: -9999px;
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    outline: 0;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+  }
+
+  .bx-pager.bx-default-pager a:hover,
+  .bx-pager.bx-default-pager a.active {
+    background: #000;
+  }
+
+  /* DIRECTION CONTROLS (NEXT / PREV) */
+
+  .bx-prev,
+  .bx-next {
+    //display: none;
+  }
+  &:hover {
+    .bx-prev,
+    .bx-next {
+      //display: block;
+    }
+  }
+
+  .bx-prev {
+    #{$dir-default}: -50px;
+    @if $text-direction == ltr {
+      background: url(../images/controls.png) no-repeat 0 -32px;
+    } @else if $text-direction == rtl {
+      background: url(../images/controls.png) no-repeat -43px -32px;
+    }
+  }
+
+  .bx-next {
+    #{$dir-opposite}: -50px;
+    @if $text-direction == ltr {
+      background: url(../images/controls.png) no-repeat -43px -32px;
+    } @else if $text-direction == rtl {
+      background: url(../images/controls.png) no-repeat 0 -32px;
+    }
+  }
+
+  .bx-prev:hover {
+    @if $text-direction == ltr {
+      background-position: 0 0;
+    } @else if $text-direction == rtl {
+      background-position: -43px 0;
+    }
+  }
+
+  .bx-next:hover {
+    @if $text-direction == ltr {
+      background-position: -43px 0;
+    } @else if $text-direction == rtl {
+      background-position: 0 0;
+    }
+  }
+
+  .bx-controls-direction a {
+    position: absolute;
+    top: 50%;
+    margin-top: -16px;
+    outline: 0;
+    width: 32px;
+    height: 32px;
+    text-indent: -9999px;
+    z-index: 9999;
+  }
+
+  .bx-controls-direction a.disabled {
+    display: none;
+  }
+
+  /* AUTO CONTROLS (START / STOP) */
+
+  .bx-controls-auto {
+    text-align: center;
+  }
+
+  .bx-controls-auto .bx-start {
+    display: block;
+    text-indent: -9999px;
+    width: 10px;
+    height: 11px;
+    outline: 0;
+    background: url(../images/controls.png) -86px -11px no-repeat;
+    margin: 0 3px;
+  }
+
+  .bx-controls-auto .bx-start:hover,
+  .bx-controls-auto .bx-start.active {
+    background-position: -86px 0;
+  }
+
+  .bx-controls-auto .bx-stop {
+    display: block;
+    text-indent: -9999px;
+    width: 9px;
+    height: 11px;
+    outline: 0;
+    background: url(../images/controls.png) -86px -44px no-repeat;
+    margin: 0 3px;
+  }
+
+  .bx-controls-auto .bx-stop:hover,
+  .bx-controls-auto .bx-stop.active {
+    background-position: -86px -33px;
+  }
+
+  /* PAGER WITH AUTO-CONTROLS HYBRID LAYOUT */
+
+  .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
+    text-align: $dir-default;
+    width: 80%;
+  }
+
+  .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto {
+    #{$dir-opposite}: 0;
+    width: 35px;
+  }
+
+  /* IMAGE CAPTIONS */
+
+  .bx-caption {
+    position: absolute;
+    bottom: 0;
+    #{$dir-default}: 0;
+    background: #666\9;
+    background: rgba(80, 80, 80, 0.75);
+    width: 100%;
+  }
+
+  .bx-caption span {
+    color: #fff;
+    font-family: Arial;
+    display: block;
+    font-size: .85em;
+    padding: 10px;
+  }
+}
+
+.bxslider {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li {
+    position: relative;
+    text-align: $dir-default;
+    .no-js & {
+      display: none;
+    }
+    &:first-child {
+      display: block;
+    }
+  }
+}

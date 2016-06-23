@@ -1,0 +1,26 @@
+<div class="clearfix gallery__dialog" slick-slider="slickInPopupOptions">
+
+  <h2 class="slim-title slick-slide__title">{{ field.getValue(currentItem.title_field, 0, 'value') }}</h2>
+
+  <div class="gallery__slide" ng-init="current_item = item" ng-repeat="item in currentNode.field_gallery.und track by $index">
+    <div class="row">
+      <div ng-class="field.getValue(item.field_description, 0, 'safe_value') ? 'col-md-9' : 'col-md-10 col-md-push-1'" class="gallery__slide-media text-center">
+        <div ng-if="getType(item) == 'image'">
+          <img ng-src="{{item.url | imageStyle: 'gallery_full'}}" alt="{{item.alt}}" />
+        </div>
+        <div ng-if="getType(item) == 'video'">
+          <video-embed url="item.url"></video-embed>
+        </div>
+      </div>
+
+      <div class="col-md-3" ng-show="field.getValue(item.field_description, 0, 'safe_value')">
+        <div class="gallery__slide-info">
+          <div class="gallery__slide-description"
+               ng-bind-html="field.getValue(item.field_description, 0, 'safe_value')">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

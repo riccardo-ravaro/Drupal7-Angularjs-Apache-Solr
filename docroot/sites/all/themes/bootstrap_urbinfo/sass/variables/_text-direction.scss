@@ -1,0 +1,7 @@
+// ---------------------------------------
+// Text Direction Settings
+// ---------------------------------------
+
+$text-direction: ltr !default; // Controls global text direction, 'rtl' or 'ltr'
+$dir-default:    left !default; // 'right' for right-to-left languages
+$dir-opposite:   right !default; // 'left' for right-to-left languages

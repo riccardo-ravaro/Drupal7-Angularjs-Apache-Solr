@@ -1,0 +1,39 @@
+.overlay {
+  background: white;
+  position: fixed;
+  top: 0;
+  #{$dir-default}: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1030;
+  visibility: hidden;
+  @include transition(opacity .5s, visibility 0s .5s);
+  @include opacity(0);
+  &.is-open {
+    @include transition(opacity .5s, visibility 0s 0s);
+    @include opacity(1);
+    visibility: visible;
+  }
+
+  .bxslider {
+    visibility: hidden;
+  }
+  .bx-wrapper {
+    .bxslider {
+      visibility: visible;
+    }
+  }
+}
+
+.overlay__close {
+  position: absolute;
+  top: 15px;
+  #{$dir-opposite}: 20px;
+  z-index: 1;
+}
+
+.overlay__content {
+  padding: 50px 20px 20px;
+  overflow: auto;
+  height: 100%;
+}

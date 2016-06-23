@@ -1,0 +1,19 @@
+<form class="login" novalidate name="loginForm" ng-submit="submit()" ng-controller="LoginForm">
+  <div class="login_signup__separator"><div class="inner"><i locale-string="MSG_OR"></i></div></div>
+  <div>
+    <div class="alert alert-danger login__error" ng-show="error" locale-string="ERR_INVALID_LOGIN"></div>
+    <div ng-class="{'has-error': loginForm.name.$invalid && submitted}" class="form-group">
+      <label class="sr-only" for="login-name" locale-string="LBL_EMAIL"></label>
+      <input id="login-name" name="name" type="email" class="form-control" placeholder="{{'LBL_EMAIL' | localeString}}" ng-model="name" required />
+      <p class="help-block error" ng-show="loginForm.name.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+      <p class="help-block error" ng-show="loginForm.name.$error.email && submitted" locale-string="ERR_INVAID_EMAIL"></p>
+    </div>
+    <div ng-class="{'has-error': loginForm.pass.$invalid && submitted}" class="form-group">
+      <label class="sr-only" for="login-pass" locale-string="LBL_PASSWORD"></label>
+      <input id="login-pass" name="pass" class="form-control" type="password" placeholder="{{'LBL_PASSWORD' | localeString}}" ng-model="pass" required />
+      <p class="help-block error" ng-show="loginForm.pass.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+    </div>
+    <button class="btn-primary btn form-submit" ng-disabled="loading" type="submit" locale-string="BTN_LOGIN"></button>
+    <a class="login__forgot" ng-href="{{baseUrl}}user/password" locale-string="LNK_FORGOT_PASSWORD"></a>
+  </div>
+</form>

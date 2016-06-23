@@ -1,0 +1,12 @@
+$text-direction: rtl;
+$dir-default: right;
+$dir-opposite: left;
+
+@import "bootstrap-compass";
+@import "variables/**/*";
+@import "bootstrap-variables";
+@import "bootstrap";
+@import "bootstrap-rtl/_bootstrap-rtl.scss";
+@import "abstractions/**/*";
+@import "base/**/*";
+@import "components/**/*";

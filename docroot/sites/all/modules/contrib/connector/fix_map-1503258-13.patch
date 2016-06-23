@@ -1,0 +1,54 @@
+diff --git a/connector.info b/connector.info
+index dea3b3d..1d0e592 100644
+--- a/connector.info
++++ b/connector.info
+@@ -2,3 +2,4 @@ name = Connector
+ description = Provides base functionality for one-click login with eg. Facebook Connect and Twitter Connect
+ core = 7.x
+ package = "Connector"
++dependencies[] = entity
+diff --git a/connector.module b/connector.module
+index e58dcba..f280441 100644
+--- a/connector.module
++++ b/connector.module
+@@ -465,21 +465,30 @@ function _connector_create_account($connector_name, $cid = NULL, $consumer = NUL
+     if (!empty($connector['information callback']) && is_callable($connector['information callback'])) {
+       $info = $connector['information callback']($connector, $cid, array(), $access_token);
+     }
+-    $allowed_fields = array('name', 'mail');
++
++    $user = entity_create('user', $userinfo);
++    $wrapper = entity_metadata_wrapper('user', $user);
++
++    $unique_fields = array('name', 'mail');
+     foreach ($info as $field) {
+-      if (isset($field['sync']) && $field['sync'] && in_array($field['sync'], $allowed_fields)) {
+-        $exists = db_select('users', 'u')
+-          ->fields('u')
+-          ->condition($field['sync'], $field['value'])
+-          ->execute()
+-          ->rowCount();
+-        if ($exists < 1) {
+-          $userinfo[$field['sync']] = $field['value'];
++      if (isset($field['sync']) && $field['sync']) {
++        if (in_array($field['sync'], $unique_fields)) {
++          $exists = db_select('users', 'u')
++            ->fields('u')
++            ->condition($field['sync'], $field['value'])
++            ->execute()
++            ->rowCount();
++          if ($exists >= 1) {
++            // @TODO - Better error here about the unique field issue.
++            drupal_set_message(t("Error creating user account."), 'error');
++            return FALSE;
++          }
+         }
++        $wrapper->{$field['sync']} = $field['value'];
+       }
+     }
+ 
+-    $new_account = user_save('', $userinfo);
++    $new_account = user_save('', (array) $user);
+     // Terminate if an error occured during user_save().
+     if (!$new_account) {
+       drupal_set_message(t("Error saving user account."), 'error');

@@ -1,0 +1,15 @@
+{
+  "name": "Leaflet.encoded",
+  "homepage": "https://github.com/jieter/Leaflet.encoded",
+  "version": "0.0.4",
+  "_release": "0.0.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.4",
+    "commit": "54b5039f5213c930f64059f8ffaea93b22d879f1"
+  },
+  "_source": "git://github.com/jieter/Leaflet.encoded.git",
+  "_target": "~0.0.4",
+  "_originalSource": "Leaflet.encoded",
+  "_direct": true
+}

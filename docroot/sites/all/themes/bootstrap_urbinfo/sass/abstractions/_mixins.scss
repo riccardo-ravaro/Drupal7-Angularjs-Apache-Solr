@@ -1,0 +1,49 @@
+@import "compass/css3";
+@import "compass/utilities";
+
+@mixin line-clamp($lines: 1) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  @if $lines > 1 {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  } @else {
+    white-space: nowrap;
+  }
+}
+
+@mixin fade-in-on-parent-hover($depth: 0) {
+  @include transition(opacity .5s, visibility 0s .5s);
+  @include opacity(0);
+  visibility: hidden;
+  @if $depth == 0 {
+    .is-empty > &, // Special case for editable image
+    :hover > & {
+      @include transition(opacity .5s, visibility 0s);
+      @include opacity(1);
+      visibility: visible;
+    }
+  }
+  @if $depth == 1 {
+    :hover > * > & {
+      @include transition(opacity .5s, visibility 0s);
+      @include opacity(1);
+      visibility: visible;
+    }
+  }
+  @if $depth == 2 {
+    :hover > * > * > & {
+      @include transition(opacity .5s, visibility 0s);
+      @include opacity(1);
+      visibility: visible;
+    }
+  }
+  @if $depth == 3 {
+    :hover > * > * > * > & {
+      @include transition(opacity .5s, visibility 0s);
+      @include opacity(1);
+      visibility: visible;
+    }
+  }
+}

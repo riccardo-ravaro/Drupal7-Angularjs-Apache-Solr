@@ -1,0 +1,16 @@
+diff --git a/rest_auth.module b/rest_auth.module
+index 03c1b20..3f494fd 100755
+--- a/rest_auth.module
++++ b/rest_auth.module
+@@ -195,6 +195,11 @@ function _rest_auth_login_register($data, $name, $pass) {
+     if ($local_account = user_load_by_name($name)) {
+       return user_authenticate($local_account->name, $pass);
+     }
++    else if( valid_email_address($name) ){
++      if ($local_account = user_load_by_mail($name)) {
++        return user_authenticate($local_account->name, $pass);
++      }
++    }
+   }
+   // Authenticate if necessary
+   if (variable_get('rest_auth_auth_side') == 'consumer') {

@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo team feature.
+ */
+
+include_once 'urbinfo_team.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function urbinfo_team_menu() {
+  $items['ajax/urbinfo-team'] = array(
+    'title' => 'Team members for Business in JSON',
+    'page callback' => 'urbinfo_team_as_json',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function urbinfo_team_as_json($nid) {
+  $specials = urbinfo_team_get_team_members_for_a_node($nid);
+  drupal_json_output($specials);
+  exit();
+}
+
+/**
+ * Returns array of team members for a given node.
+ */
+function urbinfo_team_get_team_members_for_a_node($nid) {
+
+  $team_members = array();
+
+  $node = node_load($nid);
+  if (!empty($node) && $node->type == 'business') {
+    foreach ($node->field_team[LANGUAGE_NONE] as $team_member) {
+      $team_member_ids[] = $team_member['value'];
+    }
+
+    if (!empty($team_member_ids)) {
+      $team_members = array_values(field_collection_item_load_multiple($team_member_ids));
+    }
+  }
+
+  return $team_members;
+}

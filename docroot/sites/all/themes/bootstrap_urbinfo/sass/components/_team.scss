@@ -1,0 +1,66 @@
+.team {
+
+}
+
+.team__form {
+  margin-top: 20px;
+  max-width: none;
+}
+
+.team__upload-preview {
+  margin-bottom: 10px;
+}
+
+.team__edit-btn,
+.team__done-btn {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+}
+
+.team__edit-btn {
+  @include fade-in-on-parent-hover(3);
+}
+
+.team__members {
+  text-align: center;
+}
+
+.team__members--sortable {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 0 0;
+  > li {
+    display: inline-block;
+    padding: 0 10px;
+    width: 220px;
+    vertical-align: top;
+  }
+  &.sortable-drag {
+    margin-top: 0;
+  }
+}
+
+.team__add-btn {
+  border-radius: 300px;
+  padding-bottom: 100%;
+  position: relative;
+  button {
+    background-image: image-url('silhouette-overlay.png');
+    @include background-size(cover);
+    border-radius: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.team__slider {
+  max-width: 1000px;
+  margin: 0 auto;
+  .slide {
+    padding: 10px;
+  }
+}

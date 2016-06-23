@@ -1,0 +1,241 @@
+<div class="gallery" ng-controller="Gallery">
+
+  <!-- Edit button -->
+  <div class="edit-btn-container" ng-show="canEdit && !showForm && currentNode.field_gallery.und.length">
+
+    <button class="btn btn-primary" ng-click="startEdit()">
+      <span class="glyphicon glyphicon-pencil"></span>
+      <span locale-string="BTN_EDIT_GALLERY"></span>  (<current-language-code-label></current-language-code-label>)
+    </button>
+
+    <switch-language-button obj="currentNode.field_gallery.und"></switch-language-button>
+  </div>
+
+
+  <!-- Empty text -->
+  <div ng-show="canEdit && !currentNode.field_gallery.und.length && !editMode" class="alert alert-info" role="alert">
+    <div>
+      <p locale-string="MSG_EMPTY_GALLERY"></p>
+      <button class="btn btn-primary" ng-click="startEdit()">
+        <span class="glyphicon glyphicon-picture"></span>
+        <span locale-string="BTN_ADD_SLIDE"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="gallery__view" ng-hide="editMode">
+
+    <!-- Category links -->
+    <div class="gallery__categories btn-group clearfix" opt-kind ok-key="filter" ng-show="tags.length > 0">
+      <button class='btn btn-primary--outlined active' ok-sel="*" locale-string="BTN_ALL"></button>
+      <button class="btn btn-primary--outlined" ng-repeat="label in tags" ok-sel=".{{label | tagClasses}}">{{label}}</button>
+    </div>
+
+    <!-- Thumbnails -->
+    <ul class="gallery__thumbs" isotope-container iso-options="{isOriginLeft: !rtl}">
+      <li class="gallery__thumb"
+          ng-show="showGalleryItem($index)"
+          ng-repeat="item in currentNode.field_gallery.und track by $index"
+          ng-class="selectLang(item.field_tags) | tagClasses"
+          isotope-item>
+        <a ng-click="showNgDialog({{ $index }})">
+          <img ng-src="{{item.url | galleryThumb}}" alt="{{item.alt}}" />
+          <div class="gallery__thumb-info">
+            <div class="gallery__thumb-info-text">
+              <h3 class="gallery__thumb-title">{{selectLang(item.title_field)[0].value}}</h3>
+              <div class="gallery__thumb-categories">
+                <span ng-repeat="tag in selectLang(item.field_tags)">{{tag.value}}<span ng-show="!$last">, </span></span>
+              </div>
+              <div class="gallery__thumb-icon"><span class="icon" ng-class="{'icon-picture': getType(item) == 'image', 'icon-video': getType(item) == 'video'}"></span></div>
+            </div>
+          </div><!-- /.gallery__thumb-info -->
+        </a>
+      </li><!-- /.gallery__thumb -->
+    </ul><!-- /.gallery__thumbs -->
+    <p ng-show="currentNode.field_gallery.und.length > 10" class="gallery__more_switch">
+      <a href="#" ng-show="!galleryShowAllThumbnails" ng-click="galleryShowAllThumbnailsSwitch()"><span locale-string="LNK_MORE"></span></a>
+      <a href="#" ng-show="galleryShowAllThumbnails" ng-click="galleryShowAllThumbnailsSwitch()"><span locale-string="LNK_LESS"></span></a>
+    </p>
+
+  </div><!-- /.gallery__view -->
+
+  <div class="gallery__edit" ng-show="canEdit">
+    <div edit-spotlight="editMode" edit-spotlight-done-btn="true">
+
+      <div class="edit-spotlight__help" ng-hide="showForm">
+        <span class="glyphicon glyphicon-move"></span>
+        <span locale-string="MSG_DRAG_IMAGES"></span>
+      </div>
+
+      <!-- Draggable version of gallery -->
+      <ul id="gallery-drag"
+          sortable="{dragEnd: dragEnd, containment: '#gallery-drag'}"
+          class="gallery__thumbs gallery__thumbs--sortable"
+          ng-model="currentNode.field_gallery.und"
+          ng-hide="showForm">
+        <li sortable-item class="gallery__thumb" ng-repeat="item in currentNode.field_gallery.und">
+          <!-- Thumbnail image -->
+          <img sortable-item-handle ng-src="{{item.url | galleryThumb}}" alt="{{item.alt}}" />
+
+          <!-- Edit / remove options -->
+          <div class="gallery__thumb-options" ng-show="confirmIndex !== $index">
+            <button class="btn btn-default btn-sm" ng-click="edit($index)" tooltip="{{'BTN_EDIT' | localeString}}" tooltip-trigger="hover">
+              <span class="glyphicon glyphicon-pencil"></span>
+              <span class="sr-only" locale-string="BTN_EDIT"></span>
+            </button>
+            <button class="btn btn-danger btn-sm" ng-click="confirmRemove($index)" tooltip="{{'BTN_REMOVE' | localeString}}" tooltip-trigger="hover">
+              <span class="glyphicon glyphicon-remove"></span>
+              <span class="sr-only" locale-string="BTN_REMOVE"></span>
+            </button>
+          </div><!-- /.gallery__thumb-options -->
+
+          <!-- Remove confirmation -->
+          <div class="gallery__thumb-remove" ng-show="confirmIndex === $index">
+            <p locale-string="MSG_CONFIRM_REMOVE_SLIDE"></p>
+            <button class="btn btn-danger" ng-click="remove($index)">
+              <span class="glyphicon glyphicon-ok"></span>
+              <span class="sr-only" locale-string="BTN_REMOVE"></span>
+            </button>
+            <button class="btn btn-default" ng-click="cancel()">
+              <span class="glyphicon glyphicon-remove"></span>
+              <span class="sr-only" locale-string="BTN_CANCEL"></span>
+            </button>
+          </div><!-- /.gallery__thumb-remove -->
+
+        </li><li class="gallery__thumb">
+          <div class="gallery__thumb-add">
+            <button class="btn btn-primary btn-lg" ng-click="add()">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span class="visible-md-inline visible-lg-inline" locale-string="BTN_ADD_SLIDE"></span>
+            </button>
+          </div>
+        </li>
+      </ul><!-- /.gallery__thumbs -->
+
+      <!-- Add / edit form -->
+      <form class="gallery__form"
+            name="$parent.form"
+            ng-show="showForm"
+            ng-submit="submit()"
+            novalidate>
+        <h3>
+          <span ng-hide="editIndex !== null" locale-string="MSG_ADD_SLIDE"></span>
+          <span ng-show="editIndex !== null" locale-string="MSG_EDIT_SLIDE"></span>
+        </h3>
+
+        <div ng-show="error != null" class="alert alert-danger" role="alert" ng-bind="error"></div>
+
+        <div class="form-group" ng-class="{'has-error': form.image.$invalid && submitted}">
+          <div class="btn-group">
+            <label class="btn btn-primary" ng-model="input.type" btn-radio="'image'" locale-string="LBL_IMAGE"></label>
+            <label class="btn btn-primary" ng-model="input.type" btn-radio="'video'" locale-string="LBL_VIDEO"></label>
+          </div>
+        </div><!-- /.form-group -->
+
+        <div class="row">
+          <div class="col-lg-6">
+
+            <div class="form-group" ng-class="{'has-error': form.image.$invalid && submitted}" ng-if="input.type == 'image'">
+              <label class="control-label" for="gallery-image">
+                <span locale-string="LBL_IMAGE"></span>
+                <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+              </label>
+              <div class="gallery__upload-preview">
+                <img ng-if="selectedFile != null" ng-src="{{selectedFile.url | imageStyle: 'thumbnail'}}" alt="Preview" />
+              </div>
+              <input id="gallery-image"
+                      name="image"
+                      type="file"
+                      class="form-control"
+                      ng-file-select="onFileSelect($files)"
+                      accept="image/*" />
+              <p class="help-block error" ng-show="!selectedFile && submitted" locale-string="ERR_REQUIRED"></p>
+            </div><!-- /.form-group -->
+
+            <div class="form-group" ng-class="{'has-error': form.video.$invalid && submitted}" ng-if="input.type == 'video'">
+              <label class="control-label" for="gallery-video">
+                <span locale-string="LBL_VIDEO_URL"></span>
+                <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+              </label>
+              <input ng-if="input.type == 'video'" id="gallery-video"
+                      name="video"
+                      type="text"
+                      class="form-control"
+                      ng-pattern="/https?:\/\/([a-z0-9]+\.)?youtube\.(.*?)\/watch\?v=([a-zA-Z0-9_-]*)[%&amp;=#a-zA-Z0-9_-]*/"
+                      required=""
+                      ng-model="input.video" />
+
+              <p class="help-block error" ng-show="form.video.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+              <p class="help-block error" ng-show="form.video.$error.pattern && submitted" locale-string="ERR_INVALID_VIDEO_URL"></p>
+            </div><!-- /.form-group -->
+
+            <div class="form-group" ng-class="{'has-error': form.title.$invalid && submitted}">
+              <label class="control-label" for="gallery-title">
+                <span locale-string="LBL_TITLE"></span>
+                <span class="form-required" title="This field is required.">*</span>
+              </label>
+              <input id="gallery-title"
+                      name="title"
+                      type="text"
+                      class="form-control"
+                      required
+                      ng-model="input.title" />
+              <p class="help-block error" ng-show="form.title.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+            </div><!-- /.form-group -->
+
+            <div class="form-group" ng-class="{'has-error': form.tags.$invalid && submitted}">
+              <label class="control-label" for="gallery-tags" locale-string="LBL_CATEGORIES"></label>
+              <ul class="tag-list">
+                <li class="label label-default" ng-repeat="tag in input.tags track by $index">
+                  {{tag}} <a href="" class="tag-list__remove" ng-click="removeTag($index)">&times;</a>
+                </li>
+              </ul>
+
+              <div class="input-group">
+                <input id="gallery-tags"
+                      name="tags"
+                      type="text"
+                      class="form-control"
+                      typeahead="tag for tag in tags | filter:$viewValue"
+                      typeahead-on-select="addTag()"
+                      ng-keypress="onKeyPress($event)"
+                      ng-model="input.tag" />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-success" ng-click="addTag()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span class="sr-only" locale-string="BTN_ADD_CATEGORY"></span>
+                  </button>
+                </span>
+              </div><!-- /input-group -->
+            </div><!-- /.form-group -->
+          </div><!-- /.col -->
+
+          <div class="col-lg-6">
+            <div class="form-group" ng-class="{'has-error': form.description.$invalid && submitted}">
+              <label class="control-label" for="gallery-description" locale-string="LBL_DESCRIPTION"></label>
+              <textarea id="gallery-description"
+                      name="description"
+                      class="form-control"
+                      ckeditor="editorOptions"
+                      ng-model="input.description"></textarea>
+            </div><!-- /.form-group -->
+          </div><!-- /.col -->
+
+        </div><!-- /.row -->
+
+        <div class="form-group">
+          <button class="btn btn-success" type="submit" ng-disabled="progress">
+            <span ng-hide="editIndex !== null">
+              <span class="glyphicon glyphicon-plus"></span>
+              <span locale-string="BTN_ADD"></span>
+            </span>
+            <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+          </button>
+          <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+        </div>
+      </form><!-- /.gallery__form -->
+
+    </div>
+  </div><!-- /.gallery__edit -->
+
+</div><!-- /.gallery -->

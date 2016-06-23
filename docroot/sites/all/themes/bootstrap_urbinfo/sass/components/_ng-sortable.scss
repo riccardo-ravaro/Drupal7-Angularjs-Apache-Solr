@@ -1,0 +1,32 @@
+.sortable-item,
+.sortable-placeholder {
+  display: inline-block;
+  width: percentage(1/3);
+  @media (min-width: $screen-sm-min) {
+    width: percentage(1/4);
+  }
+}
+
+.sortable-item {
+}
+
+.sortable-handle {
+  cursor: move;
+}
+
+.sortable-placeholder {
+  border: 1px dashed darkgrey;
+  box-sizing: border-box;
+  background-color: #dbdbdb;
+}
+
+.sortable-drag {
+  position: absolute;
+  pointer-events: none;
+  @include opacity(.8);
+  z-index: 9999;
+}
+
+.sortable-hidden {
+  display: none !important;
+}

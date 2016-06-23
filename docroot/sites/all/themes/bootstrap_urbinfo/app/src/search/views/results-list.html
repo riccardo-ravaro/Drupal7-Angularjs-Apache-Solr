@@ -1,0 +1,45 @@
+<div class="search-results__list-content">
+  <article class="search-result" ng-repeat="result in search.results">
+    <a class="block-link" ng-href="{{result.url}}">
+      <div class="search-result__image">
+        <ul class="bxslider" bx-slider="pager: false">
+          <li ng-repeat="url in result.field_gallery | split: ', ' | excludeVideos | limitTo:3 track by $index" notify-when-repeat-finished>
+            <img ng-src="{{url | imageStyle: 'business_thumbnail'}}" alt="" />
+          </li>
+        </ul>
+      </div>
+      <div class="search-result__content">
+        <header>
+          <h2 class="search-result__title">{{result.title}}</h2>
+        </header>
+        <div class="search-result__type">{{businessTypes[result.field_business_type].name}}</div>
+        <div class="search-result__address">
+          <span class="result__address-thoroughfare" ng-show="result.field_address_thoroughfare.length">{{result.field_address_thoroughfare}},</span>
+          <span class="result__address-locality" ng-show="result.field_address_locality.length">{{result.field_address_locality}},</span>
+          <span class="result__address-administrative-area" ng-show="result.field_address_administrative_area.length">{{result.field_address_administrative_area}}</span>
+          <span class="result__address-postal-code" ng-show="result.field_address_postal_code.length">{{result.field_address_postal_code}}</span>
+        </div>
+        <div class="search-result__description"><p ng-bind-html="result.body"></p></div>
+        <div class="search-result__distance" ng-show="result.distance.length">{{result.distance | number: 0}}km</div>
+        <div class="search-result__services">
+          <ul>
+            <li ng-repeat="tid in result.field_facilities | split: ', ' track by $index"
+                ng-if="facilities[tid].featured">
+              <span class="icon icon-{{facilities[tid].icon}}" tooltip="{{facilities[tid].name}}"></span>
+              <span class="sr-only">{{facilities[tid].name}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </a>
+  </article><!-- /.search-result -->
+</div><!-- /.search-results__list-content -->
+
+<pagination ng-show="search.pager.pages > 1"
+            ng-model="search.pager.page"
+            total-items="search.pager.count"
+            items-per-page="30"
+            max-size="5"
+            previous-text="<?php print t('Previous'); ?>"
+            next-text="<?php print t('Next'); ?>">
+</pagination>

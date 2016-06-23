@@ -1,0 +1,52 @@
+---
+driver_plugin: vagrant
+driver_config:
+  customize:
+    memory: 1024
+
+platforms:
+- name: ubuntu-12.04
+  driver_config:
+    box: opscode-ubuntu-12.04-nochef
+    box_url: https://opscode-vm.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box
+    require_chef_omnibus: 11.6.0
+    network:
+      - ["private_network", {ip: "11.12.14.13"}]
+  run_list:
+  - recipe[apt]
+
+suites:
+- name: default
+  run_list:
+    - recipe[hipsnip-solr_test::default]
+    - recipe[minitest-handler]
+  attributes:
+    minitest:
+      tests: "hipsnip-solr_test/default_test.rb"
+- name: solr-4
+  run_list:
+    - recipe[hipsnip-solr_test::solr_4]
+    - recipe[minitest-handler]
+  attributes:
+    minitest:
+      tests: "hipsnip-solr_test/solr_4_test.rb"
+    java:
+      jdk_version: 7
+- name: solr-3.6-jetty-8
+  run_list:
+    - recipe[hipsnip-solr_test::solr_3.6]
+    - recipe[minitest-handler]
+  attributes:
+    minitest:
+      tests: "hipsnip-solr_test/solr_3.6_test.rb"
+    java:
+      jdk_version: 7
+- name: use-syslog
+  run_list:
+    - recipe[hipsnip-solr_test::use_syslog]
+    - recipe[minitest-handler]
+  attributes:
+    minitest:
+      tests: "hipsnip-solr_test/use_syslog_test.rb"
+    java:
+      jdk_version: 7

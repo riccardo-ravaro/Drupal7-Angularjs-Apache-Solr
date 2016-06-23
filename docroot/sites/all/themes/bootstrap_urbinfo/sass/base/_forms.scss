@@ -1,0 +1,90 @@
+.form-control {
+  @include box-shadow(none);
+}
+
+// Drupal doesn't nest radios and checkboxes inside label.
+.radio input[type="radio"].form-radio,
+.checkbox input[type="checkbox"].form-checkbox {
+  margin-#{$dir-default}: 0;
+}
+
+label.is-disabled {
+  color: #999;
+}
+
+.has-error input {
+  background: #fee;
+}
+
+form {
+  text-align: $dir-default;
+  max-width: 50em;
+}
+
+.form-required {
+  color: $brand-danger;
+}
+
+.field-widget-date-select {
+  legend {
+    font-size: 1em;
+    border: none;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .date-padding {
+    padding: 0;
+  }
+  label {
+    font-weight: normal;
+  }
+}
+
+.office-hours-block-hours {
+  .form-group {
+    display: inline-block;
+    margin: 0 .35em;
+  }
+}
+
+.field-type-office-hours {
+  tr.odd td {
+    padding: 4px 8px;
+  }
+  tr.even td {
+    padding: 4px 0;
+  }
+}
+
+.upload-wrapper {
+  display: inline-block;
+  position: relative;
+  input {
+    cursor: pointer;
+    @include opacity(0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  ::-webkit-file-upload-button {
+    cursor:pointer;
+  }
+}
+
+.editable-image {
+  position: relative;
+}
+
+.editable-image__select {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -16px;
+  width: 100%;
+  width: 100%;
+  text-align: center;
+
+  @include fade-in-on-parent-hover;
+}

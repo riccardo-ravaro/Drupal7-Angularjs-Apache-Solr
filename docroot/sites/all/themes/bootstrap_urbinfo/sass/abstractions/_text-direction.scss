@@ -1,0 +1,39 @@
+/**
+ * Helper mixins for bi-directional text
+ */
+
+@mixin dir-properties($property, $top, $right, $bottom, $left) {
+  @if $text-direction == ltr {
+    #{$property}: $top $right $bottom $left;
+  } @else {
+    #{$property}: $top $left $bottom $right;
+  }
+}
+
+@mixin dir-padding($top, $right, $bottom, $left) {
+  @include dir-properties(padding, $top, $right, $bottom, $left);
+}
+
+@mixin dir-margin($top, $right, $bottom, $left) {
+  @include dir-properties(margin, $top, $right, $bottom, $left);
+}
+
+@mixin dir-border-width($top, $right, $bottom, $left) {
+  @include dir-properties(border-width, $top, $right, $bottom, $left);
+}
+
+@mixin dir-border-style($top, $right, $bottom, $left) {
+  @include dir-properties(border-style, $top, $right, $bottom, $left);
+}
+
+@mixin dir-border-color($top, $right, $bottom, $left) {
+  @include dir-properties(border-color, $top, $right, $bottom, $left);
+}
+
+@mixin dir-border-radius($topLeft, $topRight, $bottomRight, $bottomLeft) {
+  @if $text-direction == ltr {
+    @include border-radius($topLeft $topRight $bottomRight $bottomLeft);
+  } @else {
+    @include border-radius($topRight $topLeft $bottomLeft $bottomRight);
+  }
+}

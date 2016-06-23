@@ -1,0 +1,54 @@
+h1, h2, h3, h4, h5, h6 {
+  &:first-child {
+    margin-top: 0;
+  }
+  > a {
+    color: #888;
+  }
+}
+
+a {
+  cursor: pointer;
+}
+
+.page-header {
+  margin-top: 0;
+  font-weight: 300;
+}
+
+.more-link {
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+  margin-top: 20px;
+  > a {
+    color: #999;
+    &:hover {
+      color: #333;
+      text-decoration: none;
+    }
+    > .glyphicon {
+      margin-#{$dir-default}: .25em;
+      vertical-align: top;
+    }
+  }
+}
+
+.nav, .pagination, .carousel, .panel-title a {
+  cursor: pointer;
+}
+
+.block-link {
+  color: $text-color;
+  display: block;
+  &:link,
+  &:visited,
+  &:active,
+  &:hover {
+    color: $text-color;
+    text-decoration: none;
+  }
+}
+
+.slim-title {
+  font-weight: 400;
+}

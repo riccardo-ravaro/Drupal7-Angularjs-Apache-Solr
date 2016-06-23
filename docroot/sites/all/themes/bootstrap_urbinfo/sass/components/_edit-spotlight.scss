@@ -1,0 +1,62 @@
+.edit-spotlight__mask {
+  @include transition(opacity .5s, visibility 0s .5s);
+  background: black;
+  @include opacity(0);
+  visibility: hidden;
+  content: '';
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.edit-spotlight__content {
+  background: white;
+  display: none;
+  padding: 10px;
+  margin: -10px;
+  position: relative;
+  z-index: 1002;
+}
+
+.edit-spotlight--centered .edit-spotlight__content {
+  position: fixed;
+  width: 500px;
+  top: 50%;
+  left: 50%;
+  margin-top: -300px;
+  margin-left: -250px;
+}
+
+.edit-spotlight--inner .edit-spotlight__content {
+  margin: 0;
+}
+
+.edit-spotlight.is-visible {
+  .edit-spotlight__mask {
+    @include transition(opacity .5s, visibility 0s);
+    @include opacity(.4);
+    visibility: visible;
+  }
+  .edit-spotlight__content {
+    display: block;
+  }
+}
+
+.edit-spotlight__done-btn {
+  position: absolute;
+  top: -33px;
+  #{$dir-opposite}: 0;
+  &.is-fixed {
+    position: fixed;
+    top: 72px;
+  }
+}
+
+.edit-spotlight__help {
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #666;
+}

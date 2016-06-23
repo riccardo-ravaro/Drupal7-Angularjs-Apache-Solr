@@ -1,0 +1,77 @@
+.slick-slider__wrapper {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.slick-prev, .slick-next {
+  position: absolute;
+  display: block;
+  width: 40px;
+  height: 40px;
+  line-height: 0;
+  font-size: 0;
+  cursor: pointer;
+  color: transparent;
+  top: 50%;
+  margin-top: -20px;
+  padding: 0;
+  border: none;
+  outline: none;
+
+  background-color: $brand-blue;
+  &:hover {
+    background-color: $brand-blue;
+  }
+}
+
+.slick-prev:before, .slick-next:before {
+  font-family: 'Glyphicons Halflings';
+  font-size: 20px;
+  line-height: 1;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  opacity: 1;
+  position: absolute;
+
+  top: 9px;
+}
+
+.slick-prev:hover, .slick-prev:focus, .slick-next:hover, .slick-next:focus {
+  background-color: #198AB7;
+}
+
+.slick-prev {
+  left: -60px;
+}
+
+.slick-next {
+  right: -60px;
+}
+
+.slick-prev:before {
+  content: "\e079";
+  left: 9px;
+}
+
+.slick-next:before {
+  content: "\e080";
+  right: 9px;
+}
+
+.slick-prev.slick-disabled, .slick-next.slick-disabled,
+.slick-prev.slick-disabled:before, .slick-next.slick-disabled:before {
+  display: none;
+  visibility: hidden;
+}
+
+.slick-slide {
+  width: 375px;
+  img {
+    display: inline-block;
+  }
+}
+
+.ngdialog .slick-slider {
+  margin-bottom: 0;
+}

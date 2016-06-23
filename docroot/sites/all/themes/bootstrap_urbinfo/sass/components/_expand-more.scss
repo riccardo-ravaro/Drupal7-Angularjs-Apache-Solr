@@ -1,0 +1,8 @@
+@media print {
+  .expand-more__toggle {
+    display: none;
+  }
+  .expand-more__content {
+    max-height: none !important;
+  }
+}

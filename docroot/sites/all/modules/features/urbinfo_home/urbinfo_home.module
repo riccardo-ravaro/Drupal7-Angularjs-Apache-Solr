@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo home feature.
+ */
+
+include_once 'urbinfo_home.features.inc';

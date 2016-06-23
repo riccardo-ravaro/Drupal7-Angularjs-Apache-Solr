@@ -1,0 +1,20 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo business feature.
+ */
+
+include_once 'urbinfo_business.features.inc';
+include_once 'includes/urbinfo_business.preprocess.inc';
+
+/**
+ * Implements hook_form_alter().
+ */
+function urbinfo_business_form_business_node_form_alter(&$form, &$form_state, $form_id) {
+  // $node = $form['#node'];
+  // if (empty($node->nid)) {
+  //   urbinfo_business_hide_field_groups($form, array('group_info'));
+  //   $form['#fieldgroups']['group_basic']->format_type = 'div';
+  // }
+}
+

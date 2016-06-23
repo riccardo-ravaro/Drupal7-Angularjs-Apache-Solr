@@ -1,0 +1,149 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo users feature.
+ */
+
+include_once 'urbinfo_users.features.inc';
+
+/**
+ * Implements hook_block_info().
+ */
+function urbinfo_users_block_info() {
+  $block['urbinfo_users_connector_register']['info'] = t('Connector: Register');
+  $block['urbinfo_users_connector_login']['info'] = t('Connector: Login');
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function urbinfo_users_block_view($delta) {
+  global $user;
+  switch ($delta) {
+    case 'urbinfo_users_connector_register':
+    case 'urbinfo_users_connector_login':
+      if (!$user->uid) {
+        $state = array('build_info' => array('args' => array()));
+        $form_name = 'urbinfo_users_login_connector_button_form';
+        if ($delta == 'urbinfo_users_connector_register') {
+          $form_name = 'urbinfo_users_register_connector_button_form';
+        }
+        $form = drupal_retrieve_form($form_name, $state);
+        if ($form['#has_buttons']) {
+          $connector_form = drupal_get_form($form_name);
+          return array(
+            'content' => $connector_form,
+          );
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_services_request_preprocess_alter().
+ */
+function urbinfo_users_services_request_preprocess_alter($controllers, &$args, $options) {
+  // Check if CSRF token and fake token exist when user creates account.
+  if ($controllers['callback'] == '_user_resource_create') {
+    if (!isset($_SERVER['HTTP_X_CSRF_TOKEN']) && !isset($_SERVER['HTTP_X_URBINFO_TOKEN'])) {
+      drupal_access_denied();
+      exit();
+    }
+  }
+}
+
+/**
+ * Alter the honeypot protections added to a particular form.
+ */
+function urbinfo_users_honeypot_form_protections_alter(&$options, $form) {
+  // Disable honeypot if CSRF and fake token exist.
+  if ($form['form_id']['#value'] == 'user_register_form') {
+    if (isset($_SERVER['HTTP_X_CSRF_TOKEN']) && isset($_SERVER['HTTP_X_URBINFO_TOKEN'])) {
+      $options = array();
+    }
+  }
+}
+
+/**
+ * Login connector form.
+ *
+ * We clone connector_button_form but change the label.
+ * This is a hack that allows us to change label title. Other ways to change it lead to the wrong 'clicked button' detection.
+ */
+function urbinfo_users_login_connector_button_form($form, &$form_state, $account = FALSE, $label = 'Login with !title', $action = 'default') {
+  $connector_button_form = connector_button_form($form, $form_state, $account, $label, $action);
+  return $connector_button_form;
+}
+
+/**
+ * Register connector form.
+ *
+ * We clone connector_button_form but change the label.
+ * This is a hack that allows us to change label title. Other ways to change it lead to the wrong 'clicked button' detection.
+ */
+function urbinfo_users_register_connector_button_form($form, &$form_state, $account = FALSE, $label = 'Register with !title', $action = 'default') {
+  $connector_button_form = connector_button_form($form, $form_state, $account, $label, $action);
+  return $connector_button_form;
+}
+
+/**
+ * Implements hook_connector_action_alter().
+ */
+function urbinfo_users_connector_action_alter(&$connector_actions) {
+  // Replace login callback with our custom one.
+  if (!empty($connector_actions['default'])) {
+    $connector_actions['default']['login callback'] = '_urbinfo_users_connector_log_in';
+  }
+}
+
+/**
+ * Custom login connector that logs in social network user right away. Default approach asked for email confirmation and we didn't want that.
+ */
+function _urbinfo_users_connector_log_in($connector_name, $cid = NULL, $consumer = NULL, $access_token = NULL, $request_token = NULL) {
+  global $user;
+
+  if (user_is_logged_in()) {
+    return TRUE;
+  }
+
+  $connector = _connector_get_connectors($connector_name);
+  if (!$connector) {
+    return FALSE;
+  }
+
+  //Fetch connector ID
+  if ($cid === NULL && isset($connector['id callback']) && is_callable($connector['id callback'])) {
+    $cid = call_user_func($connector['id callback'], $connector);
+  }
+
+  if ($cid !== NULL) {
+    $authname = $connector_name . '__' . $cid;
+    $account = user_external_load($authname);
+    if (!$account) {
+      // Return NULL and not FALSE so that we know we didn't find a user.
+      return NULL;
+    }
+
+    if ($account) {
+
+      if ($account->status) {
+        //Log in user
+        $form_state['uid'] = $account->uid;
+        user_login_submit(array(), $form_state);
+        return TRUE;
+      }
+      else {
+        drupal_set_message(t('Your account is currently pending approval by the site administrator.'), 'warning');
+        // why logout when account is pending? may be it is intentional.
+        if (isset($connector['logout callback']) && is_callable($connector['logout callback'])) {
+          call_user_func($connector['logout callback'], $connector, $connection->cid);
+        }
+      }
+
+    }
+  }
+
+  return FALSE;
+}

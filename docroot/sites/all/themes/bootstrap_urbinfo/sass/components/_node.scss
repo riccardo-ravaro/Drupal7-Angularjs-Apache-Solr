@@ -1,0 +1,21 @@
+.node {
+}
+
+.node__header {
+  position: relative;
+}
+
+.node__title {
+  @extend .page-header;
+  .node.has-header-image & {
+    border: none;
+    color: white;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    margin: 0;
+    @include transform(translateY(-50%));
+  }
+}

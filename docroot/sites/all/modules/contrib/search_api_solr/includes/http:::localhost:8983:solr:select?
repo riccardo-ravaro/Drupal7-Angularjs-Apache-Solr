@@ -1,0 +1,25 @@
+http://localhost:8983/solr/select?
+fl=item_id,score&qf=tm_body$value^1.0
+
+&qf=tm_field_business_type$name_field^1.0&qf=tm_field_facilities$name_field^1.0&qf=tm_title_field^1.0&qf=tm_und_body$value^1.0&qf=tm_en_body$value^1.0&qf=tm_ar_body$value^1.0&qf=tm_zh-hans_body$value^1.0&qf=tm_fr_body$value^1.0&qf=tm_el_body$value^1.0&qf=tm_es_body$value^1.0&qf=tm_de_body$value^1.0&qf=tm_und_field_business_type$name_field^1.0&qf=tm_en_field_business_type$name_field^1.0&qf=tm_ar_field_business_type$name_field^1.0&qf=tm_zh-hans_field_business_type$name_field^1.0&qf=tm_fr_field_business_type$name_field^1.0&qf=tm_el_field_business_type$name_field^1.0&qf=tm_es_field_business_type$name_field^1.0&qf=tm_de_field_business_type$name_field^1.0&qf=tm_und_field_facilities$name_field^1.0&qf=tm_en_field_facilities$name_field^1.0&qf=tm_ar_field_facilities$name_field^1.0&qf=tm_zh-hans_field_facilities$name_field^1.0&qf=tm_fr_field_facilities$name_field^1.0&qf=tm_el_field_facilities$name_field^1.0&qf=tm_es_field_facilities$name_field^1.0&qf=tm_de_field_facilities$name_field^1.0&qf=tm_und_title_field^1.0&qf=tm_en_title_field^1.0&qf=tm_ar_title_field^1.0&qf=tm_zh-hans_title_field^1.0&qf=tm_fr_title_field^1.0&qf=tm_el_title_field^1.0&qf=tm_es_title_field^1.0&qf=tm_de_title_field^1.0
+
+&fq={!tag=facet:field_facilities}im_field_facilities:"16"
+
+&fq=index_id:"businesses"&fq=hash:16yhfr
+
+&fq={!geofilt pt=51.665741411057,-0.3955078125 sfield=locs_field_location$latlon d=20}
+
+&start=0&rows=30
+
+&sort=geodist(locs_field_location$latlon,51.665741411057,-0.3955078125) asc
+
+&facet=true&facet.sort=count&facet.limit=10&facet.mincount=1
+&facet.missing=false
+&facet.field=im_field_facilities
+&f.im_field_facilities.facet.limit=50
+
+&group=true&group.ngroups=true&group.truncate=true&group.field=ss_entity_id
+
+&wt=json&json.nl=map
+
+&q="Restaurant"

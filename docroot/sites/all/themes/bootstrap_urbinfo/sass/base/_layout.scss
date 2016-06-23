@@ -1,0 +1,143 @@
+html,
+body {
+  height: 100%;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.page {
+  padding-top: $navbar-height;
+  @media print {
+    padding-top: 0;
+  }
+}
+
+.main-container {
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+// Page specific adjustments.
+
+.page-search {
+  .page,
+  .region-content,
+  .main-container,
+  #block-system-main {
+    height: 100%;
+  }
+  .main-container {
+    margin: 0;
+    padding: 0;
+    > .row,
+    > .row > section {
+      height: 100%;
+    }
+  }
+  .page-header,
+  .footer {
+    @extend .sr-only;
+  }
+}
+
+.page-about {
+  .pane-custom .pane-content,
+  .main-container .view-content {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+  }
+}
+
+.node-type-business {
+  .main-container {
+    margin: 0;
+  }
+  .tabs--primary {
+    display: none;
+  }
+}
+
+.front {
+  background: black;
+
+  .page-header {
+    @extend .sr-only;
+  }
+  .main-container {
+    margin: 0;
+  }
+  .page,
+  .region-content,
+  .main-container,
+  #block-system-main {
+    height: 100%;
+  }
+
+  @media (min-width: $screen-md-min) {
+    .navbar-inverse {
+      background: transparent;
+      border-color: transparent;
+    }
+    .navbar-collapse {
+      background: $brand-blue;
+      border: none;
+      @media (min-width: $grid-float-breakpoint) {
+        background: transparent;
+      }
+    }
+    .main-container {
+      overflow: hidden;
+      position: relative;
+      padding-top: $navbar-height;
+    }
+    .page {
+      padding-top: 0;
+    }
+  }
+}
+
+.no-video .page,
+.no-autoplay .page {
+  background-image: image-url('home-bg.jpg');
+  @include background-size(cover);
+}
+
+.background-video {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  opacity: .8;
+}
+
+.pane-views-fba5238eaa5b9456a35156b4c4f90b51 {
+  margin-top: 1em;
+  .pane-title {
+    color: white;
+    font-weight: 300;
+  }
+  @media (min-width: $screen-sm-min) {
+    margin-top: 3em;
+    text-align: center;
+    .pane-title {
+      font-size: 3em;
+    }
+  }
+}
+
+// Fixes for Admin toolbar and Bootstrap fixed navbar.
+
+.admin-menu .navbar-fixed-top {
+  top: 21px;
+}
+
+#admin-menu {
+  z-index: 9999;
+}

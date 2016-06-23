@@ -1,0 +1,17 @@
+.tag-list {
+  margin: 0 0 .5em;
+  padding: 0;
+  list-style-type: none;
+  > li {
+    display: inline-block;
+    font-size: 100%;
+    margin-#{$dir-opposite}: .5em;
+  }
+}
+
+.tag-list__remove {
+  color: white;
+  &:hover {
+    color: #eee;
+  }
+}

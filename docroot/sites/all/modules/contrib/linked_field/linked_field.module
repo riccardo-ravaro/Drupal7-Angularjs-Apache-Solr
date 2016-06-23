@@ -1,0 +1,615 @@
+<?php
+
+/**
+ * @file
+ * Main file of Linked Field module.
+ */
+
+/**
+ * Implements hook_help().
+ */
+function linked_field_help($path, $arg) {
+  switch ($path) {
+    case 'admin/reports/fields/linked-fields':
+      return '<p>' . t('This list shows all fields which are linked via !linked-field module.', array('!linked-field' => l('Linked Field', 'https://drupal.org/project/linked_field'))) . '</p>';
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function linked_field_permission() {
+  return array(
+    'access linked field list' => array(
+      'title' => t('Access linked field list'),
+      'description' => user_access('access linked field list') ? t('Get an overview of <a href="@url">all linked fields</a>.', array('@url' => url('admin/reports/fields/linked-fields'))) : t('Get an overview of all linked fields.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function linked_field_menu() {
+  $items = array();
+
+  $items['admin/reports/fields/linked-fields'] = array(
+    'title' => 'Linked fields',
+    'description' => 'Overview of all linked fields.',
+    'page callback' => 'linked_field_field_list',
+    'type' => MENU_LOCAL_TASK,
+    'access callback' => 'user_access',
+    'access arguments' => array('access linked field list'),
+    'weight' => 0,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function linked_field_menu_alter(&$items) {
+  $items['admin/reports/fields/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+}
+
+/**
+ * Implements hook_field_formatter_info_alter().
+ */
+function linked_field_field_formatter_info_alter(&$infos) {
+  foreach ($infos as &$info) {
+    // Add a settings array if no settings were found.
+    if (!isset($info['settings']) || !is_array($info['settings'])) {
+      $info['settings'] = array();
+    }
+
+    $info['settings'] += array(
+      'linked_field' => array(
+        'linked' => 0,
+        'destination' => '',
+        'advanced' => array(
+          'title' => '',
+          'target' => '',
+          'class' => '',
+          'rel' => '',
+          'text' => '',
+        ),
+      ),
+    );
+  }
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary_alter().
+ */
+function linked_field_field_formatter_settings_summary_alter(&$summary, $context) {
+  $display = $context['instance']['display'][$context['view_mode']];
+  $settings = $display['settings'];
+
+  // Break when no linked field settings were found.
+  if (!isset($settings['linked_field'])) {
+    // We have to put something in the summary so that we can ever
+    // set Linked Field settings.
+    $summary .= ' ';
+    return;
+  }
+
+  // Normalize the settings.
+  $linked = $settings['linked_field']['linked'];
+  $destination = $settings['linked_field']['destination'];
+  $title = $settings['linked_field']['advanced']['title'];
+  $target = $settings['linked_field']['advanced']['target'];
+  $class = $settings['linked_field']['advanced']['class'];
+  $rel = $settings['linked_field']['advanced']['rel'];
+  $text = $settings['linked_field']['advanced']['text'];
+
+  $summary_items = array();
+  $summary_items[] = t('Destination: @destination', array('@destination' => $destination));
+
+  if ($title) {
+    $summary_items[] = t('Title: @title', array('@title' => $title));
+  }
+
+  if ($target) {
+    $summary_items[] = t('Target: <code>@target</code>', array('@target' => $target));
+  }
+
+  if ($class) {
+    $summary_items[] = t('Class: <code>@class</code>', array('@class' => $class));
+  }
+
+  if ($rel) {
+    $summary_items[] = t('Relationship: <code>@rel</code>', array('@rel' => $rel));
+  }
+
+  if ($text) {
+    $summary_items[] = t('Text: @text', array('@text' => $text));
+  }
+
+  if ($linked && $destination) {
+    $summary .= theme('item_list', array('items' => $summary_items, 'title' => 'Linked Field'));
+  }
+  else {
+    $summary .= ' ';
+  }
+}
+
+/**
+ * Implements hook_field_formatter_settings_form_alter().
+ */
+function linked_field_field_formatter_settings_form_alter(&$settings_form, $context) {
+  $field = $context['field'];
+  $entity_type = $context['instance']['entity_type'];
+  $display = $context['instance']['display'][$context['view_mode']];
+  $settings = $display['settings'];
+
+  $settings_form['linked_field'] = array(
+    '#type' => 'container',
+    '#attributes' => array('class' => array('linked-field-linked-wrapper')),
+    '#attached' => array(
+      'css' => array(
+        drupal_get_path('module', 'linked_field') . '/css/linked-field.css',
+      ),
+    ),
+  );
+
+  $settings_form['linked_field']['linked'] = array(
+    '#title' => t('Link this field'),
+    '#type' => 'checkbox',
+    '#default_value' => $settings['linked_field']['linked'],
+  );
+
+  $settings_form['linked_field']['destination'] = array(
+    '#title' => t('Destination'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['destination'],
+    '#description' => t('Here you can enter a token which will be used as link url.'),
+    '#element_validate' => array('linked_field_element_validate_destination'),
+    '#states' => array(
+      'visible' => array(
+        'input[name$="[settings][linked_field][linked]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $settings_form['linked_field']['advanced'] = array(
+    '#title' => t('Advanced'),
+    '#type' => 'fieldset',
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        'input[name$="[settings][linked_field][linked]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+  $settings_form['linked_field']['advanced']['title'] = array(
+    '#title' => t('Title'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['advanced']['title'],
+    '#description' => t('Here you can enter a token which will be used as link <em>title</em> attribute.'),
+  );
+
+  $settings_form['linked_field']['advanced']['target'] = array(
+    '#title' => t('Target'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['advanced']['target'],
+    '#description' => t('Here you can enter a token which will be used as link <em>target</em> attribute..'),
+  );
+
+  $settings_form['linked_field']['advanced']['class'] = array(
+    '#title' => t('Class'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['advanced']['class'],
+    '#description' => t('Here you can enter a token which will be used as link <em>class</em> attribute.'),
+  );
+
+  $settings_form['linked_field']['advanced']['rel'] = array(
+    '#title' => t('Relationship'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['advanced']['rel'],
+    '#description' => t('Here you can enter a token which will be used as link <em>rel</em> attribute.'),
+  );
+
+  $settings_form['linked_field']['advanced']['text'] = array(
+    '#title' => t('Text'),
+    '#type' => 'textfield',
+    '#default_value' => $settings['linked_field']['advanced']['text'],
+    '#description' => t('Here you can enter a token which will be used as link text. Note that the actual field output will be overridden.'),
+  );
+
+  $token_types = array('field-item');
+  // We want to access vocabulary tokens in taxonomy terms.
+  if ($entity_type == 'taxonomy_term') {
+    $token_types[] = 'term';
+    $token_types[] = 'vocabulary';
+  }
+  else {
+    $token_types[] = $entity_type;
+  }
+
+  $settings_form['linked_field']['token'] = array(
+    '#type' => 'container',
+    '#theme' => 'token_tree',
+    '#token_types' => $token_types,
+    '#dialog' => TRUE,
+    '#states' => array(
+      'visible' => array(
+        'input[name$="[settings][linked_field][linked]"]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
+}
+
+/**
+ * Implements hook_field_attach_view_alter().
+ */
+function linked_field_field_attach_view_alter(&$output, $context) {
+  foreach (element_children($output) as $field_name) {
+    $element = $output[$field_name];
+    $view_modes = field_view_mode_settings($element['#entity_type'], $element['#bundle']);
+
+    // Check whether set view mode has custom settings.
+    if (isset($view_modes[$context['view_mode']]) && !$view_modes[$context['view_mode']]['custom_settings']) {
+      $context['view_mode'] = 'default';
+    }
+
+    $instance = field_info_instance($element['#entity_type'], $field_name, $element['#bundle']);
+
+    // Check whether view mode exists in the field instance.
+    if (isset($instance['display'][$context['view_mode']])) {
+      $display = $instance['display'][$context['view_mode']];
+    }
+    // If no view mode was specified it should be set to '_custom'
+    // like in field_view_field().
+    elseif ($context['view_mode'] == '_custom' && is_array($context['display'])) {
+      $display = $context['display'];
+    }
+    // Otherwise we use the 'default' view mode.
+    else {
+      $display = $instance['display']['default'];
+    }
+
+    $settings = $display['settings'];
+
+    // We need special behavior for Display Suite fields.
+    if ($element['#field_type'] == 'ds') {
+      $field_settings = ds_get_field_settings($element['#entity_type'], $element['#bundle'], $element['#view_mode']);
+      $settings = isset($field_settings[$element['#field_name']]['formatter_settings']) ? $field_settings[$element['#field_name']]['formatter_settings'] : array();
+    }
+
+    // Continue to next if no Linked Field settings were found.
+    if (!isset($settings['linked_field'])) {
+      continue;
+    }
+
+    // Some entities don't have a language so we need a fallback.
+    $language = isset($element['#object']->language) ? $element['#object']->language : NULL;
+    // We need special behavior for Display Suite fields.
+    // @TODO: Where does this come from?
+    if ($element['#field_type'] != 'ds') {
+      $field_items = field_get_items($element['#entity_type'], $element['#object'], $field_name, $language);
+    }
+    foreach (element_children($element) as $delta) {
+      // Normalize the settings.
+      $linked = $settings['linked_field']['linked'];
+      $destination = $settings['linked_field']['destination'];
+      $title = $settings['linked_field']['advanced']['title'];
+      $target = $settings['linked_field']['advanced']['target'];
+      $class = $settings['linked_field']['advanced']['class'];
+      $rel = $settings['linked_field']['advanced']['rel'];
+      $text = $settings['linked_field']['advanced']['text'];
+
+      // If the destination field isn't filled for this field, we shouldn't
+      // do anything. Continue to the next field.
+      if (!$destination || !$linked) {
+        continue;
+      }
+
+      $replace_tokens = array($element['#entity_type'] => $element['#object']);
+
+      // We need special behavior for Display Suite fields.
+      // @TODO: Where does this come from?
+      if (isset($field_items[$delta])) {
+        // Get raw value of field.
+        $field_raw_value = array_shift($field_items[$delta]);
+        // Replace tokens and filter the value.
+        $replace_tokens += array(
+          'field-item' => array(
+            'delta' => $delta,
+            'raw' => $field_raw_value,
+          ),
+        );
+      }
+
+      /*
+       * Replace all field tokens and then entity tokens. This allows field
+       * tokens to be nested such as [comment:field-tags:[field:delta]:name].
+       */
+      foreach ($replace_tokens as $type => $data) {
+        $replace_token = array($type => $data);
+
+        if ($type == 'field-item') {
+          // The tokens should not be cleared when replacing field item tokens.
+          $clear = FALSE;
+        }
+        else {
+          $clear = TRUE;
+        }
+
+        $destination = token_replace($destination, $replace_token, array('clear' => $clear));
+        $title = $title ? filter_xss_admin(token_replace($title, $replace_token, array('clear' => $clear))) : '';
+        $target = $target ? check_plain(token_replace($target, $replace_token, array('clear' => $clear))) : '';
+        $class = $class ? check_plain(token_replace($class, $replace_token, array('clear' => $clear))) : '';
+        $rel = $rel ? check_plain(token_replace($rel, $replace_token, array('clear' => $clear))) : '';
+        // Would be better to have own set with allowed tags so that only
+        // inline elements are allowed.
+        $text = $text ? filter_xss_admin(token_replace($text, $replace_token, array('clear' => $clear))) : '';
+      }
+
+      // Continue to next field if destination is empty.
+      if (!$destination) {
+        continue;
+      }
+
+      // Parse the destination to get queries and fragments working.
+      $destination_parsed = drupal_parse_url($destination);
+
+      // Generate a correct link.
+      $path = url($destination_parsed['path'], $destination_parsed);
+
+      // Building the attributes for the link.
+      $attributes = array(
+        'href' => $path,
+        'title' => $title,
+        'target' => $target,
+        'class' => $class,
+      );
+
+      if (!$text) {
+        $rendered = drupal_render($element[$delta]);
+      }
+      else {
+        $rendered = $text;
+      }
+
+      // Convert HTML code to a DOMDocument object.
+      $html_dom = filter_dom_load($rendered);
+      // Getting the <body> element.
+      $body = $html_dom->getElementsByTagName('body');
+      $nodes = $body->item(0);
+
+      // Recursively walk over the DOMDocument body and place the links.
+      linked_field_link_field($nodes, $html_dom, $attributes);
+
+      // Converting the DOMDocument object back to HTML code.
+      $rendered = filter_dom_serialize($html_dom);
+      $output[$field_name][$delta] = array('#markup' => $rendered);
+    }
+  }
+}
+
+/**
+ * List all linked fields.
+ *
+ * @see field_ui_fields_list()
+ */
+function linked_field_field_list() {
+  // Get all field config instances from database.
+  $field_config_instances = db_select('field_config_instance', 'fci')->fields('fci')->execute();
+  $linked_fields = array();
+
+  foreach ($field_config_instances as $fci) {
+    $field_name = $fci->field_name;
+    $entity_type = $fci->entity_type;
+    $bundle = $fci->bundle;
+    $data = unserialize($fci->data);
+
+    // Iterate the view modes.
+    foreach ($data['display'] as $view_mode_name => $view_mode) {
+      // Proceed only if the current field is linked.
+      if (isset($view_mode['settings']['linked_field']) && $view_mode['settings']['linked_field']['linked']) {
+        // Get some information about the field.
+        $entity_info = entity_get_info($entity_type);
+        $view_mode_path = ($view_mode_name != 'default') ? '/' . $view_mode_name : '';
+        $admin = $entity_info['bundles'][$bundle]['admin']['real path'] . '/display' . $view_mode_path;
+        $view_mode_label = ($view_mode_name != 'default') ? $entity_info['view modes'][$view_mode_name]['label'] : 'Default';
+        $bundle_name = $entity_info['bundles'][$bundle]['label'];
+
+        if (!isset($linked_fields[$field_name][$entity_type]['#label'])) {
+          $linked_fields[$field_name][$entity_type]['#label'] = $entity_info['label'];
+        }
+
+        if (!isset($linked_fields[$field_name][$entity_type][$bundle]['#label'])) {
+          $linked_fields[$field_name][$entity_type][$bundle]['#label'] = $bundle_name;
+        }
+
+        $linked_fields[$field_name][$entity_type][$bundle][$view_mode_name] = array(
+          'admin' => $admin,
+          'view_mode' => $view_mode_label,
+        );
+
+      }
+    }
+  }
+
+  $header = array(t('Field name'), t('Linked in'));
+  $rows = array();
+
+  // Iterate all linked fields and build a table.
+  foreach ($linked_fields as $field_name => $entity_types) {
+    $rows[$field_name]['data'][0] = check_plain($field_name);
+    $fieldsets = array();
+
+    // Iterate all entity types.
+    foreach ($entity_types as $entity_type => $bundles) {
+      $entity_type_label = $bundles['#label'];
+      $bundle_list = array();
+
+      // Iterate all entity bundles.
+      foreach (element_children($bundles) as $key) {
+        $bundle_name = $bundles[$key]['#label'];
+
+        $view_modes = $bundles[$key];
+
+        $view_mode_list = array();
+
+        // Iterate all bundle view modes.
+        foreach (element_children($view_modes) as $key) {
+          $view_mode = $view_modes[$key];
+          $view_mode_list[] = l($view_mode['view_mode'], $view_mode['admin']);
+        }
+
+        $bundle_list[] = array(
+          'data' => $bundle_name,
+          'children' => $view_mode_list,
+        );
+      }
+
+      // Add a new fieldst per entity type.
+      $fieldsets[] = array(
+        '#type' => 'fieldset',
+        '#title' => $entity_type_label,
+        '#children' => theme('item_list', array('items' => $bundle_list)),
+        '#attributes' => array('class' => array('collapsible', 'collapsed')),
+      );
+    }
+
+    drupal_add_library('system', 'drupal.collapse');
+    $rows[$field_name]['data'][1] = drupal_render($fieldsets);
+  }
+
+  // Sort rows by field name.
+  ksort($rows);
+  $output = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('No fields are linked yet.'),
+  );
+
+  return $output;
+}
+
+/**
+ * Form element validation handler for destination field in settings form.
+ */
+function linked_field_element_validate_destination($element, &$form_state) {
+  $value = $element['#value'];
+  // We check whether 'fields' exists in the form_state values.
+  if (isset($form_state['values']['fields'])) {
+    // We can hardcode the key because it is ever the same structure.
+    $field = $element['#array_parents'][1];
+    // Get 'linked' value.
+    $linked = $form_state['values']['fields'][$field]['settings_edit_form']['settings']['linked_field']['linked'];
+    // If this field should be linked, the destination field is required.
+    if ($linked && !$value) {
+      form_error($element, t('!name field is required.', array('!name' => $element['#title'])));
+    }
+  }
+}
+
+/**
+ * Recursive function for linking text parts and images in DOMNodes.
+ *
+ * @param DOMNode $node
+ *   An object which gets investigated.
+ * @param DOMDocument $dom
+ *   An object which represents an entire HTML or XML document.
+ * @param array $attributes
+ *   An array containing element attributes.
+ */
+function linked_field_link_field($node, $dom, $attributes) {
+  if ($node->hasChildNodes() && $node->nodeName != 'a') {
+    $c = $node->childNodes->length;
+    for ($i = $c; $i > 0; --$i) {
+      $child = $node->childNodes->item($i - 1);
+      linked_field_link_field($child, $dom, $attributes);
+      if ($child->nodeType == XML_TEXT_NODE) {
+        $text = $child->textContent;
+        if (strlen(trim($text))) {
+          // Convert all applicable characters to HTML entities.
+          $text = htmlentities($text, ENT_QUOTES, 'UTF-8');
+          // Create new <a> element, set the text and the href attribute.
+          $element = $dom->createElement('a', $text);
+
+          // Adding the attributes.
+          foreach ($attributes as $name => $value) {
+            if ($value) {
+              // Convert all HTML entities back to their applicable characters.
+              $value = html_entity_decode($value);
+              $element->setAttribute($name, $value);
+            }
+          }
+
+          // Replace the the original element with the new one.
+          $node->replaceChild($element, $child);
+        }
+      }
+      elseif ($child->nodeName == 'img') {
+        // Create new <a> element, set the href and append the image.
+        $element = $dom->createElement('a');
+
+        // Adding the attributes.
+        foreach ($attributes as $name => $value) {
+          if ($value) {
+            // Convert all HTML entities back to their applicable characters.
+            $value = html_entity_decode($value);
+            $element->setAttribute($name, $value);
+          }
+        }
+
+        $node->replaceChild($element, $child);
+        $element->appendChild($child);
+      }
+    }
+  }
+}
+/**
+ * Implements hook_token_info().
+ *
+ * Provides tokens for the current field item.
+ */
+function linked_field_token_info() {
+  $info = array();
+
+  $info['types']['field-item'] = array(
+    'name' => t('Field item'),
+    'description' => t('Tokens related to delta value of field.'),
+    'needs-data' => 'field-item',
+  );
+
+  $info['tokens']['field-item']['delta'] = array(
+    'name' => t('Field item delta'),
+    'description' => t('The delta of this field item.'),
+  );
+
+  $info['tokens']['field-item']['raw'] = array(
+    'name' => t('Raw item value'),
+    'description' => t('The raw value of this field item.'),
+  );
+
+  return $info;
+}
+/**
+ * Implements hook_tokens().
+ *
+ * Replace our tokens that we provide in linked_field_token_info().
+ */
+function linked_field_tokens($type, $tokens, array $data = array(), array $options = array()) {
+  $replacements = array();
+
+  if ($type == 'field-item') {
+    foreach ($tokens as $name => $original) {
+      $replacements[$original] = $data['field-item'][$name];
+    }
+  }
+
+  return $replacements;
+}

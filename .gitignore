@@ -1,0 +1,88 @@
+# Ignore paths that contain user-generated content.
+docroot/sites/*/files
+docroot/sites/*/private
+docroot/files/*
+docroot/cache
+private
+tmp
+
+# ** Only works in OSs that support newer versions of fnmatch (Bash 4+)
+docroot/sites/default/**/files
+docroot/sites/default/**/private
+
+# Environment specific settings.
+local.settings.php
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.bz2
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+
+# Logs and databases #
+######################
+*.log
+*.sql
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Thumbs.db
+._*
+*~
+
+# Vim generated files #
+######################
+*.un~
+*.swp
+
+# SASS #
+##########
+.sass-cache
+
+# Ignore Eclipse IDE stuff
+.buildpath
+.project
+.settings/*
+.settings
+.htpasswd
+.DS_Store
+
+# Ignore Netbeans IDE stuff
+nbproject/*
+build.xml
+build/*
+nbbuild/*
+dist/*
+nbdist/*
+nbactions.xml
+nb-configuration.xml
+
+# Ignore PHPStore IDE stuff
+.idea
+
+# Ignore Sublime SFTP config file
+sftp-config.json
+
+# Ignore Node Modules
+sites/all/themes/*/node_modules
+
+# Vagrant private files
+.vagrant
+
+# Temp files
+*.tmp
+
+# subversion files
+.svn
+
+# Ruby Bundle lock files
+*.lock

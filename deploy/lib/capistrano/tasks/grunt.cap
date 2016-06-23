@@ -1,0 +1,8 @@
+namespace :grunt do
+  desc "Take site offline"
+  task :build do
+    on roles(:web) do
+      execute "/usr/local/rvm/bin/rvm 2.1.3 do grunt --gruntfile=#{fetch(:release_path)}/docroot/sites/all/themes/bootstrap_urbinfo/Gruntfile.js build"
+    end
+  end
+end

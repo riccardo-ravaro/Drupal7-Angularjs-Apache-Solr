@@ -1,0 +1,123 @@
+.btn {
+  border: none;
+}
+
+.btn-header {
+  background: #555;
+  color: white;
+  &:hover {
+    background: #333;
+    color: white;
+  }
+}
+
+.btn-plain {
+  @include border-radius(0);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.btn-primary--outlined {
+  background: none;
+  border: 2px solid $brand-blue;
+  &.active {
+    background: #198AB7;
+    border-color: #198AB7;
+    color: #fff;
+  }
+}
+
+.navbar-inverse .navbar-toggle {
+  border: none;
+  color: white;
+  font-size: 1.25em;
+  padding: 5px 0 0 0;
+}
+
+.connector-button {
+  text-align: center;
+  margin-bottom: .5em;
+  vertical-align: middle;
+  background: #fff;
+  border: 1px solid #D5D5D5;
+  line-height: 30px;
+  font-size: 18px;
+
+  > .icon {
+    float:left;
+    color: white;
+    display: inline-block;
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+    line-height: 30px;
+    text-align: center;
+  }
+  > .icon:before {
+    vertical-align: middle;
+  }
+}
+
+.connector-button.oauthconnector-twitter {
+  .icon {
+    background: $twitter-blue;
+  }
+
+  &:hover {
+    background: darken($twitter-blue, 10%);
+    color: white;
+  }
+}
+
+.connector-button.oauthconnector-facebook {
+  .icon {
+    background: $facebook-blue;
+  }
+
+  &:hover {
+    background: darken($facebook-blue, 10%);
+    color: white;
+  }
+}
+
+.connector-button.oauthconnector-google {
+  .icon {
+    background: $google-red;
+  }
+
+  &:hover {
+    background: darken($google-red, 10%);
+    color: white;
+  }
+}
+
+.edit-btn-container {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+  @include fade-in-on-parent-hover(3);
+}
+
+.urbinfo__share-btn {
+  width: 100%;
+  .easy_social_box div.easy_social-widget {
+    width: 100%;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 5px;
+    &:last-child {
+      border-bottom: 0;
+    }
+    &.easy_social-widget-googleplus,
+    &.easy_social-widget-linkedin,
+    &.easy_social-widget-twitter {
+      padding-bottom: 0;
+    }
+  }
+  .dropdown-menu {
+    margin: 0;
+    padding: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+}

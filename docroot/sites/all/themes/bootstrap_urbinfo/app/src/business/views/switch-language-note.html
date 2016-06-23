@@ -1,0 +1,17 @@
+<div class="languages_switch__help_bar languages_switch__help_bar__switch_language_note">
+  <div class="languages_switch__help_bar__icon">
+    <i>?</i>
+  </div>
+  <div class="languages_switch__help_bar__text">
+    <h2 ng-show="helpTextHeader" locale-string="{{ helpTextHeader }}"></h2>
+    <p ng-show="helpText" locale-string="{{ helpText }}"></p>
+    <span class="languages_switch__help_bar__text_triangle"></span>
+
+    <!--<switch-language-button field-name="{{ name }}" field="{{ field }}"></switch-language-button>-->
+
+
+    <button class="business__description-edit-btn btn btn-primary" ng-click="switchLanguage()">
+      <span locale-string="BTN_SWITCH_LANGUAGE"></span>
+    </button>
+  </div>
+</div>

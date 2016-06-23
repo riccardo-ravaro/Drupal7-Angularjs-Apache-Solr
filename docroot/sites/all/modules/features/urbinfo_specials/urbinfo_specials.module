@@ -1,0 +1,144 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo specials feature.
+ */
+
+include_once 'urbinfo_specials.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function urbinfo_specials_menu() {
+  $items['ajax/urbinfo-specials'] = array(
+    'title' => 'Specials for Business in JSON',
+    'page callback' => 'urbinfo_specials_as_json',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function urbinfo_specials_as_json($nid) {
+  $specials = urbinfo_specials_get_specials_for_a_node($nid);
+  drupal_json_output($specials);
+  exit();
+}
+
+/**
+ * Returns array of specials for a given node.
+ */
+function urbinfo_specials_get_specials_for_a_node($nid, $load_all = TRUE) {
+  $specials = array();
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+    ->entityCondition('bundle', 'promotion')
+    ->fieldCondition('og_group_ref', 'target_id', $nid)
+    ->addTag('urbinfo_business_specials');
+
+  $result = $query->execute();
+  if (isset($result['node'])) {
+    if ($load_all) {
+      $specials = array_values(node_load_multiple(array_keys($result['node'])));
+    }
+    else {
+      return array_keys($result['node']);
+    }
+  }
+
+  return $specials;
+}
+
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function urbinfo_specials_preprocess_node(&$variables) {
+  if ($variables['type'] !== 'promotion') {
+    return;
+  }
+
+  if ($variables['view_mode'] == 'full') {
+
+    if (!empty($variables['og_group_ref'][0]['target_id'])) {
+
+      // Add related businesss to the template context.
+      $variables['related_business'] = node_load($variables['og_group_ref'][0]['target_id']);
+
+      // Related business logo.
+      if (!empty($variables['related_business']->field_logo[LANGUAGE_NONE][0]['uri'])) {
+        $variables['content']['related_business']['logo'] = array(
+          '#theme' => 'image',
+          '#path' => $variables['related_business']->field_logo[LANGUAGE_NONE][0]['uri'],
+          '#style_name' => 'thumbnail'
+        );
+        $variables['content']['related_business']['linked_logo']['#markup'] = l(drupal_render($variables['content']['related_business']['logo']), 'node/' . $variables['related_business']->nid, array('html' => TRUE));
+      }
+
+      // Close button
+      $variables['content']['related_business']['close'] = array(
+        '#markup' => l(
+          '',
+          'node/' . $variables['related_business']->nid,
+          array('attributes' => array('class' => array('specials__node--close')))
+        ),
+      );
+
+      $specials_for_business = urbinfo_specials_get_specials_for_a_node($variables['related_business']->nid, FALSE);
+      $position = array_search($variables['nid'], $specials_for_business);
+
+      // Next button
+      if ($position + 1 < count($specials_for_business)) {
+        $variables['content']['related_business']['next'] = array(
+          '#markup' => l(
+            t('Next'),
+            'node/' . $specials_for_business[$position + 1],
+            array('attributes' => array('class' => array('specials__node--next slick-next')))
+          ),
+        );
+      }
+
+      // Previous button
+      if ($position - 1 >= 0) {
+        $variables['content']['related_business']['prev'] = array(
+          '#markup' => l(
+            t('Previous'),
+            'node/' . $specials_for_business[$position - 1],
+            array('attributes' => array('class' => array('specials__node--prev slick-prev')))
+          ),
+        );
+      }
+
+      $variables['content']['related_business']['title']['#markup'] = t('<b>@specials</b> - @business_name (@position / @count)', array(
+        '@specials' => t('Specials'),
+        '@business_name' => $variables['related_business']->title,
+        '@position' => $position + 1,
+        '@count' => count($specials_for_business),
+      ));
+
+    }
+
+    // Node content background.
+    $background_image = image_style_url('specials_background', $variables['field_image'][0]['uri']);
+    $variables['content_attributes_array']['style'][] = "background: linear-gradient(
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.3)
+      ), url($background_image) repeat-y top center";
+
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter
+ *
+ * Add alternate data check to the specials EFQ query. We check if specials valid till date is less or equal current time
+ * or is set to NULL.
+ *
+ * @param QueryAlterableInterface $query
+ */
+function urbinfo_specials_query_urbinfo_business_specials_alter(QueryAlterableInterface $query) {
+  $query->leftJoin('field_data_field_valid_till', 'valid_till', 'node.nid = valid_till.entity_id');
+  $or = db_or()->condition('valid_till.field_valid_till_value', date('Y-m-d h:m:s'), '>=')->isNull('valid_till.field_valid_till_value');
+  $query->condition($or);
+}

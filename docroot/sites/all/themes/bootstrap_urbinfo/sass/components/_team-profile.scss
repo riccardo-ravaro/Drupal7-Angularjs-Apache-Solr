@@ -1,0 +1,32 @@
+.team-profile {
+}
+
+.team-profile__image {
+  text-align: center;
+  > img {
+    margin: 0 auto 20px auto;
+    display: inline-block;
+  }
+}
+
+.team-profile__name {
+  font-size: 2em;
+  margin: 0;
+}
+
+.team-profile__role {
+  font-weight: 200;
+  margin-bottom: .25em;
+}
+
+.team-profile__description {
+  max-width: 60em;
+  text-align: $dir-default;
+  margin: 0 auto;
+  &[dir="rtl"] {
+    text-align: right;
+  }
+  &[dir="ltr"] {
+    text-align: left;
+  }
+}

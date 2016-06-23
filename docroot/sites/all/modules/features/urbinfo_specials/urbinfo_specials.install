@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * Helper function.
+ */
+function _urbinfo_specials_install_set_weight($weight) {
+  db_update('system')
+    ->fields(array('weight' => $weight))
+    ->condition('name', 'urbinfo_specials')
+    ->execute();
+}
+
+/**
+ * Implements hook_install().
+ */
+function urbinfo_specials_install() {}
+
+/**
+ * Implements hook_update_N.
+ *
+ */
+function urbinfo_specials_update_7001() {
+  _urbinfo_specials_install_set_weight(101);
+}
+
+/**
+ * Implements hook_update_N.
+ * Bring urbinfo_specials weight back.
+ */
+function urbinfo_specials_update_7002() {
+  _urbinfo_specials_install_set_weight(0);
+}

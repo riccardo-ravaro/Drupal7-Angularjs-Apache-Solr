@@ -1,0 +1,15 @@
+name = Swift Mailer
+description = Installs Swift Mailer as a mail system.
+core = 7.x
+package = Mail
+files[] = includes/classes/SWIFTMailSystem.inc
+files[] = includes/classes/html2text.inc
+configure = admin/config/people/swiftmailer
+dependencies[] = mailsystem
+
+; Information added by drupal.org packaging script on 2013-06-18
+version = "7.x-1.5"
+core = "7.x"
+project = "swiftmailer"
+datestamp = "1371531052"
+

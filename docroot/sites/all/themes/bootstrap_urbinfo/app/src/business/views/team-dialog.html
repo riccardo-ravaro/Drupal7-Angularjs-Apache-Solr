@@ -1,0 +1,31 @@
+<div class="clearfix team__dialog" slick-slider="slickInPopupOptions">
+
+  <h2 class="slim-title slick-slide__title" locale-string="MSG_TEAM_MEMBER">Team member</h2>
+
+  <div ng-repeat="member in members track by $index">
+    <div class="team-profile row">
+
+      <div class="team-profile__image col-md-5">
+        <img ng-src="{{member.field_image.und[0].url | imageStyle: 'team_thumbnail'}}" alt="" />
+        <div class="team-profile__social-icons social__icons-bar">
+          <a target="_blank" ng-show="member.field_facebook.und[0].url" ng-href="{{ member.field_facebook.und[0].url }}" class="icon icon-facebook"></a>
+          <a target="_blank" ng-show="member.field_googleplus.und[0].url" ng-href="{{ member.field_googleplus.und[0].url }}" class="icon icon-googleplus"></a>
+          <a target="_blank" ng-show="member.field_twitter.und[0].url" ng-href="{{ member.field_twitter.und[0].url }}" class="icon icon-twitter"></a>
+          <a target="_blank" ng-show="member.field_linkedin.und[0].url" ng-href="{{ member.field_linkedin.und[0].url }}" class="icon icon-linkedin"></a>
+        </div>
+      </div>
+
+      <div class="col-md-7">
+        <div class="team-profile__content">
+          <h3 class="team-profile__name slim-title" ng-bind="selectLang(member.field_full_name)[0].value"></h3>
+          <div class="team-profile__role" ng-bind="selectLang(member.field_job_title)[0].value"></div>
+        </div>
+        <div class="team-profile__description"
+             use-field-language="member.field_description"
+             ng-bind-html="selectLang(member.field_description)[0].safe_value">
+        </div>
+      </div>
+
+    </div><!-- /.team-profile -->
+  </div>
+</div>

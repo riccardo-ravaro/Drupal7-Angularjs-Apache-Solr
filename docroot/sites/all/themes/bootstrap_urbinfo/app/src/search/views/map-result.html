@@ -1,0 +1,37 @@
+<article class="search-result search-result--map">
+  <a class="block-link" ng-href="{{result.url}}">
+    <div class="search-result__image">
+      <img ng-src="{{result.field_gallery | split: ', ':0 | imageStyle: 'business_thumbnail'}}" alt="{{result.title}}" />
+    </div>
+    <div class="search-result__content">
+      <header>
+        <h2 class="search-result__title" ng-bind="result.title"></h2>
+      </header>
+      <div class="search-result__type" ng-bind="businessTypes[result.field_business_type].name"></div>
+      <div class="search-result__address">
+        <span class="result__address-thoroughfare" ng-show="result.field_address_thoroughfare.length">
+          {{result.field_address_thoroughfare}},
+        </span>
+        <span class="result__address-locality" ng-show="result.field_address_locality.length">
+          {{result.field_address_locality}},
+        </span>
+        <span class="result__address-administrative-area"
+              ng-show="result.field_address_administrative_area.length"
+              ng-bind="result.field_address_administrative_area"></span>
+        <span class="result__address-postal-code"
+              ng-show="result.field_address_postal_code.length"
+              ng-bind="result.field_address_postal_code"></span>
+      </div>
+      <div class="search-result__distance" ng-show="result.distance.length">{{result.distance | number: 0}}km</div>
+      <div class="search-result__services">
+        <ul>
+          <li ng-repeat="tid in result.field_facilities | split: ', ' track by $index"
+              ng-if="facilities[tid].featured">
+            <span class="icon icon-{{facilities[tid].icon}}" tooltip="{{facilities[tid].name}}"></span>
+            <span class="sr-only" ng-bind="facilities[tid].name"></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </a>
+</article><!-- /.search-result -->

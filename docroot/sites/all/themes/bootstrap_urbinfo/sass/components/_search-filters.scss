@@ -1,0 +1,17 @@
+.search-filters {
+  @include transition(max-height .5s);
+
+  clear: both;
+  max-height: 0;
+  overflow: hidden;
+  .has-filters-open & {
+    max-height: 300px;
+  }
+  > form {
+    margin-bottom: 10px;
+  }
+}
+
+.search-filters__title {
+  font-size: 1.2em;
+}

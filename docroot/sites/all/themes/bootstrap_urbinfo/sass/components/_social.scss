@@ -1,0 +1,27 @@
+.social__icons-bar {
+  .icon {
+    color: white;
+    display: inline-block;
+    border-radius: 50%;
+    height: 32px;
+    width: 32px;
+    line-height: 30px;
+    text-align: center;
+    &:before {
+      vertical-align: middle;
+    }
+    margin: 0 5px;
+  }
+  .icon-facebook {
+    background: $facebook-blue;
+  }
+  .icon-twitter {
+    background: $twitter-blue;
+  }
+  .icon-linkedin {
+    background: $linkedin-blue;
+  }
+  .icon-googleplus {
+    background: $google-red;
+  }
+}

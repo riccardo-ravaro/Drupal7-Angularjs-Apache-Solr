@@ -1,0 +1,117 @@
+
+.search-result {
+  font-size: 13px;
+  overflow: hidden;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  &:hover {
+    background: lighten($brand-blue, 45%);
+  }
+}
+
+.search-result__image {
+  float: $dir-default;
+  width: 90px;
+  height: 90px;
+  margin-#{$dir-opposite}: 10px;
+  overflow: hidden;
+  @media (max-width: 499px) {
+    // Crop image to square.
+    // Responsive image might be better here.
+    img {
+      margin: .2em (percentage(1 - 4/3) / 2) 0;
+      max-width: percentage(4/3);
+    }
+  }
+  @media (min-width: 500px) {
+    width: 150px;
+    height: 113px;
+  }
+  @media (min-width: $screen-md-min) {
+    width: 250px;
+    height: 188px;
+  }
+}
+
+.search-result__content {
+  overflow: hidden;
+}
+
+.search-result__title {
+  color: #888;
+  font-size: 1.25em;
+  margin: 0 0 .2em;
+  @include line-clamp;
+  @media (min-width: 500px) {
+    font-size: 1.5em;
+  }
+  > a {
+    color: #888;
+  }
+}
+
+.search-result__type {
+  @include line-clamp;
+}
+
+.search-result__address {
+  font-weight: 200;
+  margin-bottom: .5em;
+  @include line-clamp;
+  @media (min-width: 500px) {
+    margin-bottom: .75em;
+  }
+}
+
+.search-result__distance {
+  font-weight: 600;
+  float: $dir-default;
+  font-size: 1.2em;
+  @media (min-width: 500px) {
+    font-size: 1.3em;
+  }
+}
+
+.search-result__description {
+  display: none;
+  @media (min-width: $screen-md-min) {
+    display: block;
+  }
+  > p {
+    @include line-clamp(4);
+  }
+}
+
+.search-result__services {
+  float: $dir-opposite;
+  > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    > li {
+      color: #999;
+      display: inline-block;
+      margin-#{$dir-opposite}: .25em;
+      font-size: 1.25em;
+      @media (min-width: 500px) {
+        font-size: 1.5em;
+      }
+    }
+  }
+}
+
+.search-result--map {
+  border-bottom: 0;
+  padding: 0;
+  &:hover {
+    background: transparent;
+  }
+  .search-result__image {
+    width: 90px;
+    height: 90px;
+    img {
+      margin: .2em (percentage(1 - 4/3) / 2) 0;
+      max-width: percentage(4/3) !important;
+    }
+  }
+}

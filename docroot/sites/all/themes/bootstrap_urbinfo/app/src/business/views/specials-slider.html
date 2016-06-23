@@ -1,0 +1,17 @@
+<div class="slide" ng-repeat="special in specialsItems | filterSpecialsByDate">
+  <div class="special__image" ng-if="special.field_image.und.length">
+    <a ng-href="{{ specialsUrl(special) }}"><img class="img-responsive" ng-src="{{special.field_image.und[0].url | imageStyle: 'special_list'}}" alt="" /></a>
+    <div class="special__valid-till-date" ng-show="special.field_valid_till.und[0].value">
+      <span class="day">
+        {{ special.field_valid_till.und[0].value | stringToDate | date:'d' }}
+      </span>
+      <span class="month">
+        {{ special.field_valid_till.und[0].value | stringToDate | date:"MMM" }}
+      </span>
+    </div>
+  </div>
+  <div class="special__content">
+    <h3 class="special__title"><a ng-href="{{ specialsUrl(special) }}" ng-bind="selectLang(special.title_field)[0].value"></a></h3>
+    <div class="special__description" ng-bind-html="selectLang(special.body)[0].safe_value | truncate:true:100"></div>
+  </div>
+</div><!-- /.special -->

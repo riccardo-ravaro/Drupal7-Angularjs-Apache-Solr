@@ -1,0 +1,16 @@
+name = Urbinfo authoring
+description = CMS authoring setup
+core = 7.x
+package = Urbinfo
+dependencies[] = features
+dependencies[] = filter
+dependencies[] = media
+dependencies[] = wysiwyg
+features[features_api][] = api:2
+features[filter][] = filtered_html
+features[filter][] = full_html
+features[filter][] = plain_text
+features[wysiwyg][] = filtered_html
+features[wysiwyg][] = full_html
+features_exclude[dependencies][ckeditor] = ckeditor
+project path = sites/all/modules/features

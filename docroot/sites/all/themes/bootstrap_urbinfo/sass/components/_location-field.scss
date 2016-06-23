@@ -1,0 +1,20 @@
+.location-field {
+  position: relative;
+}
+
+.location-field__text {
+  padding-#{$dir-opposite}: 25px;
+}
+
+.location-field__detect {
+  position: absolute;
+  color: #666;
+  #{$dir-opposite}: 8px;
+  top: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  &:focus {
+    outline:none;
+  }
+}

@@ -1,0 +1,43 @@
+namespace :drush do
+  desc "Take site offline"
+  task :site_offline do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} vset maintenance_mode 1 -y"
+    end
+  end
+
+  desc "Take site online"
+  task :site_online do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} vset maintenance_mode 0 -y"
+    end
+  end
+
+  desc "Apply DB updates"
+  task :update_db do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} updatedb -y"
+    end
+  end
+
+  desc "Clear cache"
+  task :clear_cache do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} cc all"
+    end
+  end
+
+  desc "Features Revert"
+  task :features_revert do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} fra -y"
+    end
+  end
+
+  desc "Rebuild registry"
+  task :rebuild_registry do
+    on roles(:web) do
+      execute "drush -r #{fetch(:release_path)}/docroot --uri=#{fetch(:uri)} rr"
+    end
+  end
+end

@@ -1,0 +1,19 @@
+.translation__list {
+  display: inline;
+  list-style: none;
+  padding: 0;
+}
+
+.translation__language {
+  display: inline;
+  @include opacity(.4);
+  &:hover {
+    @include opacity(.7);
+  }
+  &.is-current {
+    opacity: 1;
+    > a {
+      cursor: default;
+    }
+  }
+}

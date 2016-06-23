@@ -1,0 +1,34 @@
+<h2 locale-string="MSG_SWITCH_TO_LANGUAGE"></h2>
+
+<div class="languages_switch__help_bar">
+  <div class="languages_switch__help_bar__icon">
+    <i>?</i>
+  </div>
+
+  <div class="languages_switch__help_bar__text">
+    <h2 locale-string="MSG_SWITCH_TO_ANOTHER_LANGUAGE_HEADER"></h2>
+    <p locale-string="MSG_SWITCH_TO_ANOTHER_LANGUAGE_TEXT"></p>
+    <span class="languages_switch__help_bar__text_triangle"></span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-6"><b>Select language</b></div>
+  <div class="col-sm-6 text-right languages_switch__sort">
+    <label>Sort</label> <select ng-model="sort.order" ng-change="sortLanguages()" ng-options="name for (name, value) in sort.options"></select>
+  </div>
+</div>
+
+<div class="form-group languages_switch__scrollable">
+  <div class="row" ng-click="setLanguage(language.code)" ng-repeat="language in filteredLanguages" ng-class="{'current': language.code == currentLanguage }">
+    <div class="col-sm-8">{{ language.name }}</div>
+    <div class="col-sm-4 text-right"><i><span ng-if="language.has_content" locale-string="LBL_HAS_CONTENT"></span><span ng-if="!language.has_content" locale-string="LBL_EMPTY_CONTENT"></span></i></div>
+  </div>
+</div>
+
+<div class="form-group">
+  <button ng-click="getLanguageLink(currentLanguage)" class="btn btn-success" type="submit" ng-disabled="progress">
+    <span ng-show="editIndex !== null" locale-string="BTN_SWITCH_TO_LANGUAGE"></span> <b class="language_switch__btn_language">{{ getLanguageNameByCode(currentLanguage) }}</b>
+  </button>
+  <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL"></button>
+</div><!-- /.form-group -->

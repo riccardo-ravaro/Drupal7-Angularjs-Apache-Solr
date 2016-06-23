@@ -1,0 +1,10 @@
+.panel {
+  position: relative;
+}
+
+.panel-actions,
+.panel-edit {
+  position: absolute;
+  top: 3px;
+  #{$dir-opposite}: 3px;
+}

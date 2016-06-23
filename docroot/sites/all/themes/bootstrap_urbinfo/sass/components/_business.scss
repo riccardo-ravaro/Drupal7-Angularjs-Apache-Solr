@@ -1,0 +1,273 @@
+.business {
+}
+
+.business__top {
+  background: white;
+  border-bottom: 1px solid #ddd;
+  padding: 20px 0 0;
+  @media print {
+    border-bottom: 1px solid black;
+  }
+}
+
+.business__main {
+  border-bottom: 1px solid #ddd;
+  padding: 20px 0 0;
+  @media print {
+    border-bottom: 1px solid black;
+  }
+}
+
+.business__bottom {
+  background: white;
+  padding: 20px 0 0;
+}
+
+.business__cover-image {
+  position: relative;
+  padding-bottom: 35%;
+  overflow: hidden;
+  img {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    #{$dir-default}: 0;
+    -webkit-backface-visibility: hidden;
+  }
+  background-position: 0 0;
+}
+
+.business__logo {
+  margin: 0 auto 10px;
+  max-width: 140px;
+  @media (min-width: 480px) {
+    max-width: 200px;
+  }
+  @media (min-width: $screen-md-min) {
+    margin: 0 auto;
+  }
+  .editable-image.is-empty {
+    padding-bottom: 75%;
+  }
+}
+
+
+.business__section {
+  margin-bottom: 20px;
+  @media (min-width: $screen-sm-min) {
+    margin-bottom: 40px;
+  }
+}
+
+.business__section-title {
+  font-size: 48px;
+  font-weight: 400;
+  margin: 30px 0;
+  text-align: center;
+
+}
+
+.business__section--details {
+  overflow: hidden;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+
+  text-align: center;
+  @media (min-width: $screen-sm-min) {
+    text-align: inherit;
+  }
+  @media print {
+    text-align: $dir-default;
+    border-bottom: 1px solid black;
+  }
+}
+
+.business__section--description {
+  position: relative;
+}
+
+.business__details-text {
+  position: relative;
+  overflow: hidden;
+}
+
+.business__name {
+  font-size: 30px;
+  margin: 0;
+  @media (min-width: 480px) {
+    font-size: 36px;
+  }
+}
+
+.business__category {
+  font-size: 13px;
+  margin-bottom: 1em;
+}
+
+.business__address {
+  font-size: 15px;
+  font-weight: 200;
+}
+
+.business__section--info {
+  position: relative;
+  clear: both;
+  font-weight: 200;
+  font-size: 12px;
+  @media (min-width: 500px) {
+    font-size: 14px;
+  }
+}
+
+// Need to position edit buttons relative to section.
+.business__section--gallery,
+.business__section--team,
+.business__section--specials {
+  position: relative;
+}
+
+.business__section--specials {
+  position: relative;
+  .specials__edit {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+
+.business__info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* @include column-count(2);
+  @include column-gap($grid-gutter-width); */
+  li {
+    display: inline-block;
+    width: 50%;
+  }
+  @media (min-width: 500px) {
+    /* @include column-gap($grid-gutter-width / 2); */
+  }
+  @media (min-width: 1200px) {
+    /* @include column-count(3); */
+    li {
+      width: 33%;
+    }
+  }
+}
+
+.business__info-item {
+  white-space: nowrap;
+}
+
+.business__info-icon {
+  display: inline-block;
+  color: #999;
+  width: 1.25em;
+  margin-#{$dir-opposite}: .25em;
+  text-align: center;
+  vertical-align: middle;
+  @media (min-width: $screen-sm-min) {
+    font-size: 150%;
+  }
+}
+
+.business__info-text {
+  display: inline-block;
+  white-space: normal;
+  vertical-align: top;
+  @media (min-width: $screen-sm-min) {
+    margin: .3em 0;
+  }
+}
+
+.business__info-edit-btn {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+  z-index: 1;
+
+  @include fade-in-on-parent-hover;
+}
+
+.business__description {
+  line-height: 1.7;
+  p {
+    margin-bottom: 1.7em;
+  }
+  @media (min-width: $screen-sm-min) {
+    font-size: 15px;
+  }
+}
+
+.business__map {
+  background: white;
+  height: 400px;
+  margin-bottom: 10px;
+  @media (min-width: $screen-sm-min) {
+    border: 5px solid white;
+    margin: -100px -5px 10px -5px;
+  }
+  @media print {
+    margin: 0;
+    page-break-inside: avoid;
+  }
+}
+
+.business__actions {
+  .btn {
+    margin-#{$dir-opposite}: .25em;
+    margin-bottom: .5em;
+  }
+}
+
+.business__twitter-feed {
+  margin-bottom: 10px;
+}
+
+.business__open-list {
+  position: relative;
+  @include transition(max-height .5s);
+  overflow: hidden;
+  max-height: 0;
+  &.is-open {
+    max-height: 400px;
+  }
+  @media print {
+    margin-top: 20px;
+    max-height: none;
+  }
+}
+
+.business__edit-btn {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+  z-index: 1;
+
+  @include fade-in-on-parent-hover;
+}
+
+.business__description-edit-btn-container {
+  position: absolute;
+  top: 0;
+  #{$dir-opposite}: 0;
+  @include fade-in-on-parent-hover(1);
+}
+
+.from-to-hours-error-message {
+  display: none !important;
+}
+
+/**
+ * Error messages for from hours to hours directive.
+ */
+.ng-invalid-from-to-hours.has-errors {
+  .ng-invalid-from-to-hours {
+    .from-to-hours-error-message {
+      display: block !important;
+    }
+  }
+}

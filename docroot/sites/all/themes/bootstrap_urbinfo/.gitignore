@@ -1,0 +1,6 @@
+app/dist
+css/*.css
+css/*.css.map
+tmp
+node_modules
+html-angular-validate-report.json

@@ -1,0 +1,113 @@
+<div class="search-results" ng-class="{'is-map': state.viewMode == 'map', 'has-filters-open': state.filtersOpen}">
+
+  <div class="search-results__main" ng-class="{'is-loading': search.loading}">
+    <div class="search-results__header" ng-cloak>
+      <div ng-show="search.loading" class="search-results__loading">
+        <span class="icon icon-refresh icon-refresh--rotating"></span>
+        <span locale-string="MSG_UPDATING_RESULTS"></span>
+      </div><!-- /.search-results__loading -->
+
+      <div class="search-results__summary" ng-hide="search.loading">
+        <div ng-show="search.pager.count == 0" ng-bind="'MSG_SEARCH_RESULTS_NONE' | localeString: {
+            '!query': search.params.query,
+            '!location': search.params.locationText
+          }"></div>
+        <div ng-show="search.pager.count == 1" ng-bind="'MSG_SEARCH_RESULTS_SINGLE' | localeString: {
+            '!query': search.params.query,
+            '!location': search.params.locationText
+          }"></div>
+        <div ng-show="search.pager.count > 1" ng-bind="'MSG_SEARCH_RESULTS_COUNT' | localeString: {
+            '!count': search.pager.count,
+            '!query': search.params.query,
+            '!location': search.params.locationText
+          }"></div>
+      </div><!-- /.search-results__summary -->
+
+      <button class="search-results__filter-button btn btn-sm"
+              ng-class="{
+                'btn-primary': !searchQuery['f[]'].length,
+                'btn-success': searchQuery['f[]'].length
+              }"
+              ng-click="state.filtersOpen = !state.filtersOpen; $event.stopPropagation();">
+        <span class="glyphicon glyphicon-filter"></span>
+        <span locale-string="BTN_FILTER"></span>
+        <span ng-show="searchQuery['f[]'].length">({{searchQuery['f[]'].length}})</span>
+      </button><!-- /.search-results__filter-button -->
+
+      <div class="search-results__view-modes btn-group visible-xs-block">
+        <label class="btn btn-sm btn-default" ng-model="state.viewMode" btn-radio="'list'">
+          <span class="glyphicon glyphicon-list"></span>
+          <span locale-string="LBL_LIST"></span>
+        </label>
+        <label class="btn btn-sm btn-default" ng-model="state.viewMode" btn-radio="'map'">
+          <span class="glyphicon glyphicon-map-marker"></span>
+          <span locale-string="LBL_MAP"></span>
+        </label>
+      </div><!-- /.search-results__view-modes -->
+
+      <section class="search-filters">
+        <h3 class="search-filters__title" locale-string="MSG_SHOW_ME"></h3>
+        <form>
+          <div class="checkbox" ng-repeat="facility in facilities">
+            <label ng-class="{'is-disabled': !search.facets.field_facilities[facility.tid] && searchQuery['f[]'].indexOf('field_facilities:' + facility.tid) === -1}">
+              <input type="checkbox"
+                     name="f[]"
+                     value="field_facilities:{{facility.tid}}"
+                     ng-checked="searchQuery['f[]'].indexOf('field_facilities:' + facility.tid) > -1"
+                     ng-click="toggleFilter('field_facilities:' + facility.tid)"
+                     ng-disabled="!search.facets.field_facilities[facility.tid] && searchQuery['f[]'].indexOf('field_facilities:' + facility.tid) === -1" />
+              {{facility.name}}
+              <span class="search-filters__count"
+                    ng-hide="!search.facets.field_facilities[facility.tid] || searchQuery['f[]'].indexOf('field_facilities:' + facility.tid) > -1">
+                ({{search.facets.field_facilities[facility.tid]}})
+              </span>
+            </label>
+          </div>
+          <button class="btn btn-primary" ng-click="state.filtersOpen = false" locale-string="BTN_DONE"></button>
+          <button class="btn btn-default"
+                  ng-click="searchQuery['f[]'] = []; search.query(searchQuery)"
+                  ng-show="searchQuery['f[]'].length > 0">
+            <span locale-string="BTN_RESET"></span>
+          </button>
+        </form>
+      </section><!-- /.search-filters -->
+    </div><!-- /.search-results__header -->
+
+    <div results-list class="search-results__list"></div>
+
+  </div><!-- /.search-results__main -->
+
+  <div class="search-results__update" ng-cloak>
+    <label class="search-results__update-option" ng-show="state.mapMoved == false">
+      <input type="checkbox" ng-model="state.updateOnDrag" />
+      <span locale-string="LBL_SEARCH_ON_MOVE"></span>
+    </label>
+
+    <button class="search-results__update-button btn btn-primary"
+            type="button"
+            ng-click="searchInMapLocation()"
+            ng-show="state.updateOnDrag == false && state.mapMoved == true">
+      <span class="glyphicon glyphicon-refresh"></span>
+      <span locale-string="LBL_SEARCH_AREA"></span>
+    </button>
+  </div><!-- /.search-results__update -->
+
+  <!-- Mapbox -->
+  <leaflet class="search-results__map"
+           ng-if="!map.layers"
+           defaults="map.defaults"
+           center="map.center"
+           bounds="map.bounds"
+           markers="map.markers">
+  </leaflet>
+  <!-- Google maps -->
+  <leaflet class="search-results__map"
+           ng-if="map.layers"
+           defaults="map.defaults"
+           center="map.center"
+           bounds="map.bounds"
+           layers="map.layers"
+           markers="map.markers">
+  </leaflet>
+
+</div><!-- .search-results -->

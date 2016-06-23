@@ -1,0 +1,25 @@
+.nav-simple {
+  font-size: 15px;
+  > li {
+    > a {
+      color: $text-color;
+      padding: 10px 0;
+      &:hover,
+      &:focus {
+        background: none;
+        color: lighten($text-color, 30%);
+      }
+    }
+    &.active > a {
+      font-weight: 600;
+    }
+  }
+}
+
+.navbar-nav {
+  > li > a[href*="user/"]:before {
+    @extend .glyphicon;
+    @extend .glyphicon-user;
+    margin-#{$dir-opposite}: .5em;
+  }
+}

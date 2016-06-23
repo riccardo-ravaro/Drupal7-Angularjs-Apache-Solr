@@ -1,0 +1,13 @@
+<div class="slide" ng-repeat="member in memberItems">
+  <div class="team-member">
+    <div class="team-member__image">
+      <a href="" ng-click="showNgDialog($index)">
+        <img ng-src="{{member.field_image.und[0].url | imageStyle: 'team_thumbnail'}}" alt="" />
+      </a>
+    </div>
+    <div class="team-member__content">
+      <h3 class="team-member__name"><a href="" ng-click="showItem($index)">{{selectLang(member.field_full_name)[0].value}}</a></h3>
+      <div class="team-member__role">{{selectLang(member.field_job_title)[0].value}}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+{
+  "name": "urbinfo",
+  "description": "Urbinfo custom Drupal theme and Angular app",
+  "version": "1.0.0",
+  "author": {
+    "name": "Riccardo Ravaro",
+    "url": "http://riccardoravaro.com/"
+  },
+  "homepage": "http://www.urbinfo.com/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/urbinfo/urbinfo.git"
+  },
+  "bugs": {
+    "url": "http://github.com/urbinfo/urbinfo/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-compass": "^1.0.3",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-contrib-watch": "~0.4.3",
+    "grunt-html-angular-validate": "^0.4.0",
+    "grunt-html2js": "~0.2.9",
+    "install": "^0.1.8"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}

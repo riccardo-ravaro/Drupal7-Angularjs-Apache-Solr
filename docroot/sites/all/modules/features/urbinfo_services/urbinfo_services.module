@@ -1,0 +1,205 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo services feature.
+ */
+
+include_once 'urbinfo_services.features.inc';
+
+/**
+ * Implements hook_services_request_preprocess_alter().
+ */
+function urbinfo_services_services_request_preprocess_alter($controller, &$args, $options) {
+  // Moves files array from angular-file-upload into structure that Drupal expects.
+  if (isset($_FILES['file'])) {
+    foreach ($_FILES['file'] as $key => $value) {
+      $_FILES['files'][$key]['upload'] = $value;
+    }
+    unset($_FILES['file']);
+  }
+
+  // Creating a new translation requires a query string. Fake it.
+  if (empty($args[0]['nid']) && !empty($args[0]['tnid']) && !empty($args[0]['language'])) {
+    $_GET['target'] = $args[0]['language'];
+    $_GET['translation'] = $args[0]['tnid'];
+  }
+
+  // Actions on Entity Node Create / Update.
+  if ($controller['callback'] == '_services_entity_resource_callback') {
+
+    if ($args[1] == 'node') {
+      if ($args[0] == 'create' && !empty($args[2])) {
+        $values = &$args[2];
+        urbinfo_services_update_user_in_request($values);
+        urbinfo_services_update_title_in_request($values);
+        urbinfo_services_update_translations_in_request($values);
+      }
+      else if ($args[0] == 'update' && !empty($args[3])) {
+        $values = &$args[3];
+        urbinfo_services_update_title_in_request($values);
+        urbinfo_services_update_user_in_request($values);
+        urbinfo_services_update_translations_in_request($values);
+      }
+    }
+
+    if ($args[1] == 'file') {
+      if ($args[0] == 'create' && !empty($args[2])) {
+        $values = &$args[2];
+        urbinfo_services_update_user_in_request($values);
+      }
+      else if ($args[0] == 'update' && !empty($args[3])) {
+        $values = &$args[3];
+        urbinfo_services_update_user_in_request($values);
+      }
+    }
+
+  }
+
+}
+
+/**
+ * Attach author to the node if author doesn't exist.
+ */
+function urbinfo_services_update_user_in_request(&$values) {
+  if (empty($values['uid'])) {
+    global $user;
+    $values['uid'] = $user->uid;
+  }
+}
+
+/**
+ * Update title from main language.
+ */
+function urbinfo_services_update_title_in_request(&$values) {
+  if (!empty($values['title_field'])) {
+
+    if (isset($values['language']) && !empty($values['title_field'][$values['language']][0]['value'])) {
+      $values['title'] = $values['title_field'][$values['language']][0]['value'];
+    }
+    else {
+      $title_field  = reset($values['title_field']);
+      if (!empty($title_field[0]['value'])) {
+        $values['title'] = $title_field[0]['value'];
+      }
+    }
+
+  }
+}
+
+/**
+ * Make sure translations property is an object.
+ */
+function urbinfo_services_update_translations_in_request(&$values) {
+  if (isset($values['translations']) && is_array($values['translations'])) {
+    $values['translations'] = (object) $values['translations'];
+  }
+}
+
+/**
+ * Implements hook_services_request_postprocess_alter().
+ */
+function urbinfo_services_services_request_postprocess_alter($controller, $args, &$result) {
+  // if (is_array($result) && isset($result['nid']) && isset($result['uri'])) {
+  //   $result = node_load($result['nid']);
+  // }
+
+  // Return updated / created file instead of URI.
+  if (is_array($result)) {
+    foreach ($result as $key => $data) {
+      if (isset($data['fid']) && isset($data['uri'])) {
+        $result[$key] = file_load($data['fid']);
+      }
+    }
+  }
+
+  // Angular Resource doesn't like boolean responses.
+  if ($result === TRUE) {
+    $result = NULL;
+  }
+}
+
+/**
+ * Implements hook_node_submit().
+ *
+ * Fix file references on update.
+ * @see https://www.drupal.org/node/1433254#comment-7047026
+ */
+function urbinfo_services_node_submit($node, $form, $form_state) {
+  // foreach ($form_state['input'] as $key => $value) {
+  //   if (array_key_exists($key, $node)) {
+  //     $info = field_info_field($key);
+  //     if ($info && ($info['type'] == 'image' || $info['type'] == 'file')) {
+  //       $new_values = array(LANGUAGE_NONE => array());
+  //       foreach ($value[LANGUAGE_NONE] as $item) {
+  //         if (isset($item['fid']) && $item['fid'] > 0 && file_load($item['fid'])) {
+  //           $new_values[LANGUAGE_NONE][] = $item;
+  //         }
+  //       }
+  //       $node->{$key} = $new_values;
+  //     }
+  //   }
+  // }
+}
+
+/**
+ * Implements hook_node_load().
+ *
+ * Add some extra data to the node object for our front end app.
+ */
+function urbinfo_services_node_load($nodes, $types) {
+  // $image_fields = array('field_image', 'field_logo');
+  // $languages = language_list('enabled');
+
+  // foreach ($nodes as $nid => $node) {
+  //   foreach ($image_fields as $field_name) {
+  //     if (!empty($node->{$field_name}[LANGUAGE_NONE])) {
+  //       foreach ($node->{$field_name}[LANGUAGE_NONE] as $i => $file) {
+  //         $nodes[$nid]->{$field_name}[LANGUAGE_NONE][$i]['url'] = file_create_url($file['uri']);
+  //         $nodes[$nid]->{$field_name}[LANGUAGE_NONE][$i]['thumbnail'] = image_style_url('thumbnail', $file['uri']);
+  //       }
+  //     }
+  //   }
+
+  //   // Add translations list to node.
+  //   $node->translations = translation_node_get_translations($node->tnid);
+  //   if (empty($node->translations)) {
+  //     $node->translations = array();
+  //   }
+
+  //   // Add node URLs to translations.
+  //   foreach ($node->translations as $key => $translation) {
+  //     $language = $languages[1][$key];
+  //     $url = url('node/' . $translation->nid, array(
+  //       'language' => $language,
+  //       'absolute' => TRUE,
+  //     ));
+  //     $node->translations[$key]->url = $url;
+  //   }
+
+  //   // Add current node URL.
+  //   $url_options = array('absolute' => TRUE);
+  //   if (isset($languages[1][$node->language])) {
+  //     $url_options['language'] = $languages[1][$node->language];
+  //   }
+  //   $node->url = url('node/' . $node->nid, $url_options);
+  // }
+  // return $nodes;
+}
+
+/**
+ * Implements hook_file_load().
+ */
+function urbinfo_services_file_load($files) {
+  foreach ($files as $key => $file) {
+    // Add public URL.
+    $files[$key]->url = file_create_url($file->uri);
+
+    // Add image styles.
+    if (strpos($file->filemime, 'image/') === 0) {
+      $file->styles = array();
+      foreach (image_styles() as $style_name => $style) {
+        $file->styles[$style_name] = image_style_url($style_name, $file->uri);
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<?php
+/**
+ * @file
+ * Code for the Urbinfo common feature.
+ */
+
+include_once 'urbinfo_common.features.inc';
+
+/**
+ * Implements hook_easy_social_widget().
+ */
+function urbinfo_common_easy_social_widget() {
+  return array(
+    'facebook_share' => array(
+      'name' => 'Facebook Share', // apears on admin pages only
+      'markup' => '_urbinfo_common_widget_facebook_share_markup', // callback function that returns widget markup
+      'scripts' => array(
+        array(
+          'path' => '', // javascript include,
+          'type' => 'external', // 'external', 'module' or 'inline', defaults to 'external'
+        ),
+      ),
+    ),
+  );
+}
+
+function _urbinfo_common_widget_facebook_share_markup($url, $type, $title = NULL, $lang = 'en') {
+  $markup = <<<FB
+    <div class="fb-share-button" data-layout="button_count"></div>
+FB;
+  return $markup;
+}

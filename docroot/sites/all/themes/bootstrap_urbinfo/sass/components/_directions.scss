@@ -1,0 +1,34 @@
+.directions__header-icon {
+  float: $dir-default;
+  font-size: 150%;
+  margin-#{$dir-opposite}: 5px;
+}
+
+.directions__summary {
+  overflow: hidden;
+}
+
+.directions__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.directions__duration {
+  font-weight: 300;
+}
+
+.directions__steps {
+  cursor: pointer;
+  margin-bottom: 2em;
+}
+
+.directions__step {
+  border-bottom: 1px solid #ddd;
+  padding: 5px;
+}
+
+.directions__step-distance {
+  float: $dir-opposite;
+  font-weight: 300;
+}

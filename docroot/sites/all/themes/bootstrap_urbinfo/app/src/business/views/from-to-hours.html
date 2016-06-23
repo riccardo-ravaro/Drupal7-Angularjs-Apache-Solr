@@ -1,0 +1,21 @@
+<div class="">
+  <div class="">
+    <select ng-model="model[0].start.hours" ng-options="name for (name, value) in hour_options"></select>
+    <select ng-model="model[0].start.minutes" ng-options="name for (name, value) in minute_options"></select>
+     -
+    <select ng-model="model[0].end.hours" ng-options="name for (name, value) in hour_options"></select>
+    <select ng-model="model[0].end.minutes" ng-options="name for (name, value) in minute_options"></select>
+  </div>
+
+  <a ng-show="!showAdditionalTimeRow && !model[1]" ng-click="showAdditionalTimeRowTrigger()">Add</a>
+
+  <div ng-show="showAdditionalTimeRow || model[1]">
+    <select ng-model="model[1].start.hours" ng-options="name for (name, value) in hour_options"></select>
+    <select ng-model="model[1].start.minutes" ng-options="name for (name, value) in minute_options"></select>
+    -
+    <select ng-model="model[1].end.hours" ng-options="name for (name, value) in hour_options"></select>
+    <select ng-model="model[1].end.minutes" ng-options="name for (name, value) in minute_options"></select>
+  </div>
+
+  <p class="help-block error from-to-hours-error-message" locale-string="ERR_MSG_OPENING_HOURS_FORMAT"></p>
+</div>

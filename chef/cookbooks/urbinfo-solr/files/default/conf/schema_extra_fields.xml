@@ -1,0 +1,63 @@
+<fields>
+<!--
+  Adding German dynamic field types to our Solr Schema
+  If you enable this, make sure you have a folder called lang with stopwords_de.txt
+  and synonyms_de.txt in there
+  This also requires to enable the content in schema_extra_types.xml
+-->
+  <field name="label_de" type="text_de" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="content_de" type="text_de" indexed="true" stored="true" termVectors="true"/>
+  <field name="teaser_de" type="text_de" indexed="false" stored="true"/>
+  <field name="path_alias_de" type="text_de" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="taxonomy_names_de" type="text_de" indexed="true" stored="false" termVectors="true" multiValued="true" omitNorms="true"/>
+  <field name="spell_de" type="text_de" indexed="true" stored="true" multiValued="true"/>
+  <copyField source="label_de" dest="spell_de"/>
+  <copyField source="content_de" dest="spell_de"/>
+  <dynamicField name="tags_de_*" type="text_de" indexed="true" stored="false" omitNorms="true"/>
+  <dynamicField name="ts_de_*" type="text_de" indexed="true" stored="true" multiValued="false" termVectors="true"/>
+  <dynamicField name="tm_de_*" type="text_de" indexed="true" stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="tos_de_*" type="text_de" indexed="true" stored="true" multiValued="false" termVectors="true" omitNorms="true"/>
+  <dynamicField name="tom_de_*" type="text_de" indexed="true" stored="true" multiValued="true" termVectors="true" omitNorms="true"/>
+
+  <field name="label_el" type="text_el" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="content_el" type="text_el" indexed="true" stored="true" termVectors="true"/>
+  <field name="teaser_el" type="text_el" indexed="false" stored="true"/>
+  <field name="path_alias_el" type="text_el" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="taxonomy_names_el" type="text_el" indexed="true" stored="false" termVectors="true" multiValued="true" omitNorms="true"/>
+  <field name="spell_el" type="text_el" indexed="true" stored="true" multiValued="true"/>
+  <copyField source="label_el" dest="spell_el"/>
+  <copyField source="content_el" dest="spell_el"/>
+  <dynamicField name="tags_el_*" type="text_el" indexed="true" stored="false" omitNorms="true"/>
+  <dynamicField name="ts_el_*" type="text_el" indexed="true" stored="true" multiValued="false" termVectors="true"/>
+  <dynamicField name="tm_el_*" type="text_el" indexed="true" stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="tos_el_*" type="text_el" indexed="true" stored="true" multiValued="false" termVectors="true" omitNorms="true"/>
+  <dynamicField name="tom_el_*" type="text_el" indexed="true" stored="true" multiValued="true" termVectors="true" omitNorms="true"/>
+
+  <field name="label_fr" type="text_fr" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="content_fr" type="text_fr" indexed="true" stored="true" termVectors="true"/>
+  <field name="teaser_fr" type="text_fr" indexed="false" stored="true"/>
+  <field name="path_alias_fr" type="text_fr" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="taxonomy_names_fr" type="text_fr" indexed="true" stored="false" termVectors="true" multiValued="true" omitNorms="true"/>
+  <field name="spell_fr" type="text_fr" indexed="true" stored="true" multiValued="true"/>
+  <copyField source="label_fr" dest="spell_fr"/>
+  <copyField source="content_fr" dest="spell_fr"/>
+  <dynamicField name="tags_fr_*" type="text_fr" indexed="true" stored="false" omitNorms="true"/>
+  <dynamicField name="ts_fr_*" type="text_fr" indexed="true" stored="true" multiValued="false" termVectors="true"/>
+  <dynamicField name="tm_fr_*" type="text_fr" indexed="true" stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="tos_fr_*" type="text_fr" indexed="true" stored="true" multiValued="false" termVectors="true" omitNorms="true"/>
+  <dynamicField name="tom_fr_*" type="text_fr" indexed="true" stored="true" multiValued="true" termVectors="true" omitNorms="true"/>
+
+  <field name="label_ar" type="text_ar" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="content_ar" type="text_ar" indexed="true" stored="true" termVectors="true"/>
+  <field name="teaser_ar" type="text_ar" indexed="false" stored="true"/>
+  <field name="path_alias_ar" type="text_ar" indexed="true" stored="true" termVectors="true" omitNorms="true"/>
+  <field name="taxonomy_names_ar" type="text_ar" indexed="true" stored="false" termVectors="true" multiValued="true" omitNorms="true"/>
+  <field name="spell_ar" type="text_ar" indexed="true" stored="true" multiValued="true"/>
+  <copyField source="label_ar" dest="spell_ar"/>
+  <copyField source="content_ar" dest="spell_ar"/>
+  <dynamicField name="tags_ar_*" type="text_ar" indexed="true" stored="false" omitNorms="true"/>
+  <dynamicField name="ts_ar_*" type="text_ar" indexed="true" stored="true" multiValued="false" termVectors="true"/>
+  <dynamicField name="tm_ar_*" type="text_ar" indexed="true" stored="true" multiValued="true" termVectors="true"/>
+  <dynamicField name="tos_ar_*" type="text_ar" indexed="true" stored="true" multiValued="false" termVectors="true" omitNorms="true"/>
+  <dynamicField name="tom_ar_*" type="text_ar" indexed="true" stored="true" multiValued="true" termVectors="true" omitNorms="true"/>
+</fields>

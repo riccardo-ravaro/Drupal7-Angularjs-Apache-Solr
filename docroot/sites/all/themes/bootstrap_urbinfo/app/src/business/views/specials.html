@@ -1,0 +1,161 @@
+<div class="specials" ng-controller="Specials">
+
+  <div class="slick-slider__wrapper specials--slider-wrapper">
+    <div class="clearfix specials--slider"
+         slick-slider-dynamic="slickOptions"
+         slick-slider-dynamic-items="specials"
+         slick-slider-dynamic-template-url="business/views/specials-slider.html"
+         slick-slider-dynamic-items-name="specialsItems"
+         id="specials-slider"
+         ng-show="specials.length && !editMode">
+    </div>
+  </div>
+
+  <div class="specials__view" ng-hide="editMode">
+
+    <!-- Edit button -->
+    <div class="edit-btn-container" ng-show="canEdit && specials.length">
+      <button class="btn btn-primary" ng-click="startEdit()" >
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span locale-string="BTN_EDIT_SPECIALS"></span>  (<current-language-code-label></current-language-code-label>)
+      </button>
+      <switch-language-button obj="specials"></switch-language-button>
+    </div>
+
+    <!-- Empty text -->
+    <div ng-show="canEdit && !specials.length && !editMode" class="alert alert-info" role="alert">
+      <div>
+        <p locale-string="MSG_EMPTY_SPECIALS"></p>
+        <button class="btn btn-primary" ng-click="startEdit()">
+          <span class="glyphicon glyphicon-star"></span>
+          <span locale-string="BTN_ADD_SPECIAL"></span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.specials__view -->
+
+  <div class="specials__edit" edit-spotlight="editMode" edit-spotlight-done-btn="true">
+    <!-- Add special button -->
+    <button class="specials__add-btn btn btn-primary" ng-click="add()" ng-hide="showForm">
+      <span class="glyphicon glyphicon-plus"></span>
+      <span locale-string="BTN_ADD_SPECIAL"></span>
+    </button>
+
+    <div class="specials__list row" ng-hide="showForm">
+      <article class="special special__edit_mode_list_item col-sm-6" ng-repeat="special in specials">
+        <div class="row">
+          <div class="col-md-2 col-sm-4 col-xs-4">
+            <div class="special__image" ng-if="special.field_image.und.length">
+              <a ng-href="{{special.url}}"><img ng-src="{{special.field_image.und[0].url | imageStyle: 'thumbnail'}}" alt="" /></a>
+            </div>
+          </div>
+          <div class="text-left col-md-10 col-sm-8 col-xs-8">
+            <div class="special__content">
+              <h3 class="special__title"><a ng-href="{{special.url}}" ng-bind="selectLang(special.title_field)[0].value"></a></h3>
+              <div ng-show="special.field_valid_till.und[0].value && special.field_valid_till.und[0].value !== null" class="special__valid_till">{{ special.field_valid_till.und[0].value | stringToDate | date:'medium' }}</div>
+              <div class="special__description" ng-bind-html="selectLang(special.body)[0].safe_value | truncate:true:50"></div>
+            </div>
+            <div class="special__options">
+              <button class="btn btn-default btn-sm" ng-click="edit($index); $event.stopPropagation();" tooltip="{{'BTN_EDIT' | localeString}}" tooltip-trigger="hover">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="sr-only" locale-string="BTN_EDIT"></span>
+              </button>
+              <button class="btn btn-danger btn-sm" ng-click="remove($index); $event.stopPropagation();" tooltip="{{'BTN_REMOVE' | localeString}}" tooltip-trigger="hover">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only" locale-string="BTN_REMOVE"></span>
+              </button>
+            </div><!-- /.special__options -->
+          </div>
+        </div>
+      </article><!-- /.special -->
+    </div><!-- /.specials__list -->
+
+    <!-- Add / edit form -->
+    <form class="specials__form"
+          name="$parent.form"
+          ng-show="showForm"
+          ng-submit="submit()"
+          novalidate>
+
+      <h3>
+        <span ng-hide="editIndex !== null" locale-string="MSG_ADD_SPECIAL"></span>
+        <span ng-show="editIndex !== null" locale-string="MSG_EDIT_SPECIAL"></span>
+      </h3>
+
+      <div ng-show="error != null" class="alert alert-danger" role="alert" ng-bind="error"></div>
+
+      <div class="form-group" ng-class="{'has-error': form.image.$invalid && submitted}">
+        <label class="control-label" for="team-image">
+          <span locale-string="LBL_IMAGE"></span>
+        </label>
+        <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+        <div class="team__upload-preview" ng-if="input.image != null">
+          <img ng-src="{{input.image.url | imageStyle: 'thumbnail'}}" alt="Preview" />
+          <button class="btn btn-danger" ng-click="removeImage()" locale-string="BTN_REMOVE"></button>
+        </div>
+        <input id="team-image"
+                required
+                name="image"
+                type="file"
+                class="form-control"
+                ng-file-select="onFileSelect($files)"
+                accept="image/*" />
+        <p class="help-block error" ng-show="!input.image && submitted" locale-string="ERR_REQUIRED">
+      </div><!-- /.form-group -->
+
+      <div class="form-group" ng-class="{'has-error': form.title.$invalid && submitted}">
+        <label class="control-label" for="special-title">
+          <span locale-string="LBL_TITLE"></span>
+          <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+        </label>
+        <input id="special-title"
+                name="title"
+                type="text"
+                class="form-control"
+                required
+                ng-model="input.title" />
+        <p class="help-block error" ng-show="form.name.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+      </div><!-- /.form-group -->
+
+      <div class="form-group dropdown">
+          <label class="control-label" for="valid-till">
+            <span locale-string="LBL_VALID_TILL"></span>
+          </label>
+          <div class="dropdown-toggle" id="specials-date-time-dropdown" role="button" data-disabled="true" data-toggle="dropdown" data-target="#">
+            <div class="input-group">
+              <input type="text" id="valid-till" class="form-control" data-ng-model="input.valid_till" value="{{ input.valid_till | date:'yyyy-MM-dd HH:mm' }}"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+          </div>
+
+          <ul class="dropdown-menu">
+            <datetimepicker data-ng-model="input.valid_till" data-datetimepicker-config="{ dropdownSelector: '#specials-date-time-dropdown' }"></datetimepicker>
+          </ul>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error': form.description.$invalid && submitted}">
+        <label class="control-label" for="special-description" locale-string="LBL_DESCRIPTION"></label>
+        <span class="form-required" title="{{'MSG_REQUIRED_FIELD' | localeString}}">*</span>
+        <textarea id="special-description"
+                name="description"
+                required
+                class="form-control"
+                ckeditor="editorOptions"
+                ng-model="input.description"></textarea>
+        <p class="help-block error" ng-show="form.description.$error.required && submitted" locale-string="ERR_REQUIRED"></p>
+      </div><!-- /.form-group -->
+
+      <div class="form-group">
+        <button class="btn btn-success" type="submit" ng-disabled="progress">
+          <span ng-hide="editIndex !== null">
+            <span class="glyphicon glyphicon-plus"></span>
+            <span locale-string="BTN_ADD"></span>
+          </span>
+          <span ng-show="editIndex !== null" locale-string="BTN_SAVE"></span>
+        </button>
+        <button class="btn btn-default" type="button" ng-click="cancel()" ng-disabled="progress" locale-string="BTN_CANCEL">
+        </button>
+      </div>
+    </form><!-- /.specials__form -->
+  </div>
+</div>
